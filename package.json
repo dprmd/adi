@@ -1,5 +1,6 @@
 {
   "name": "dprmd.github.io",
+  "homepage": "https://dprmd.github.io/adi",
   "private": true,
   "version": "0.0.0",
   "type": "module",
