@@ -39,7 +39,9 @@ const GaransiHargaTerbaik = () => {
           </p>
         </div>
         <div className="input-components">
-          <label htmlFor="HargaJual">Harga Jual : </label>
+          <label htmlFor="HargaJual">
+            Harga Program Garansi Harga Terbaik :{" "}
+          </label>
           <input
             type="number"
             id="HargaJual"

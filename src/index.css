@@ -7,3 +7,7 @@
 .input-components input {
   @apply px-2 py-1 border rounded-md;
 }
+
+.input-components label {
+  @apply block;
+}
