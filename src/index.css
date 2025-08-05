@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+.input-components {
+  @apply px-3 py-2;
+}
+
+.input-components input {
+  @apply px-2 py-1 border rounded-md;
+}
