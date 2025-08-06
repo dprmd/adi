@@ -160,21 +160,19 @@ const AlokasiPemasukan = () => {
                   <b>{uangAdeSiska.toLocaleString("id-ID")}</b>
                 </li>
                 <li>
-                  Send Uang Ke <b>Dana Iki Maskiah</b> Sebesar{" "}
-                  <b>{uangEmaIki.toLocaleString("id-ID")}</b> dan{" "}
-                  <b>{uangUntukSedekah.toLocaleString("id-ID")}</b> Untuk
-                  Sedekah 🤗
+                  Transfer Uang Harian <b>Ema Iki</b> Ke <b>SeaBank Haerudin</b>{" "}
+                  Sebesar <b>{uangEmaIki.toLocaleString("id-ID")}</b>
                 </li>
                 <li>
-                  Kirim Uang Pokok Ke <b>SeaBank Haerudin</b> Sebesar{" "}
-                  <b>{uangPokok.toLocaleString("id-ID")}</b>
-                </li>
-                <li>
-                  Kirim Uang Investasi Ke <b>Dana Adi Permadi</b> Sebesar{" "}
+                  Transfer Uang Investasi Ke <b>Dana Adi Permadi</b> Sebesar{" "}
                   <b>{uangInvestasi.toLocaleString("id-ID")}</b>
                 </li>
                 <li>
-                  Kirim Uang Jajan Ke <b>SeaBank Adi Permadi</b> Sebesar{" "}
+                  Transfer Uang Pokok Ke <b>Dana Iki Maskiah</b> Sebesar{" "}
+                  <b>{uangPokok.toLocaleString("id-ID")}</b>
+                </li>
+                <li>
+                  Transfer Uang Jajan Ke <b>SeaBank Adi Permadi</b> Sebesar{" "}
                   <b>{uangJajan.toLocaleString("id-ID")}</b>
                 </li>
               </ol>
