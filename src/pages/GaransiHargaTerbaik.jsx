@@ -1,33 +1,42 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 const GaransiHargaTerbaik = () => {
+  // State
+  const navigate = useNavigate();
+
+  // Input
   const biayaPerPesanan = 1250;
   const [adminShopeePercent, setAdminShopeePercent] = useState(9);
-  const [hargaJual, setHargaJual] = useState(0);
-  const [voucher, setVoucher] = useState(0);
-  const [AMS, setAMS] = useState(0);
+  const [hargaGaransiHargaTerbaik, setHargaGaransiHargaTerbaik] = useState("");
+  const [voucher, setVoucher] = useState("");
+  const [komisiAMS, setKomisiAMS] = useState("");
 
-  // Hasil
-  const [komisiFinal, setKomisiFinal] = useState(0);
-  const [adminShopeeFinal, setAdminShopeeFinal] = useState(0);
-  const [komisiAMSFinal, setKomisiAMSFinal] = useState(0);
-  const [komisiFinalAfterAMS, setKomisiFinalAfterAMS] = useState(0);
+  // Output
+  const [totalKomisiSaya, setTotalKomisiSaya] = useState(0);
+  const [totalAdminShopee, setTotalAdminShopee] = useState(0);
+  const [totalKomisiAMS, setTotalKomisiAMS] = useState(0);
+  const [totalKomisiSayaDipotongAMS, setTotalKomisiSayaDipotongAMS] =
+    useState(0);
 
-  const calculate = (e) => {
+  const hitung = (e) => {
     e.preventDefault();
-    const totalAdmin = (adminShopeePercent / 100) * hargaJual + biayaPerPesanan;
-    const hargaFinal = hargaJual - totalAdmin - voucher;
-    const komisiAMS = (AMS / 100) * hargaFinal;
+    const totalAdmin =
+      (adminShopeePercent / 100) * Number(hargaGaransiHargaTerbaik) +
+      biayaPerPesanan;
+    const hargaFinal =
+      Number(hargaGaransiHargaTerbaik) - totalAdmin - Number(voucher);
+    const totalKomisiAMSDidapat = (komisiAMS / 100) * hargaFinal;
 
-    setKomisiFinal(hargaFinal);
-    setAdminShopeeFinal(totalAdmin);
-    setKomisiAMSFinal(komisiAMS);
-    setKomisiFinalAfterAMS(hargaFinal - komisiAMS);
+    setTotalKomisiSaya(hargaFinal);
+    setTotalAdminShopee(totalAdmin);
+    setTotalKomisiAMS(totalKomisiAMSDidapat);
+    setTotalKomisiSayaDipotongAMS(hargaFinal - totalKomisiAMSDidapat);
   };
 
   return (
     <div className="flex justify-center items-center flex-col gap-y-3">
-      <h3 className="text-center text-2xl my-4">
+      <h3 className="text-center text-2xl mt-3">
         Perhitungan Garansi Harga Terbaik
       </h3>
 
@@ -38,6 +47,8 @@ const GaransiHargaTerbaik = () => {
             1.250
           </p>
         </div>
+
+        {/* Harga Program */}
         <div className="input-components">
           <label htmlFor="HargaJual">
             Harga Program Garansi Harga Terbaik :{" "}
@@ -45,38 +56,81 @@ const GaransiHargaTerbaik = () => {
           <input
             type="number"
             id="HargaJual"
-            defaultValue={hargaJual}
+            value={hargaGaransiHargaTerbaik}
+            placeholder="Isi Harga Program . . ."
             onChange={(e) => {
-              setHargaJual(e.target.value);
+              setHargaGaransiHargaTerbaik(e.target.value);
             }}
           />
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              setHargaGaransiHargaTerbaik("");
+            }}
+            className="px-2 py-1 bg-red-500 mx-2 rounded-md"
+          >
+            Clear
+          </button>
         </div>
+
+        {/* Voucher */}
         <div className="input-components">
           <label htmlFor="voucher">Voucher (Jika Ada) : </label>
           <input
             type="number"
             id="voucher"
-            defaultValue={voucher}
+            value={voucher}
+            placeholder="Masukan Voucher . . ."
             onChange={(e) => {
               setVoucher(e.target.value);
             }}
           />
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              setVoucher("");
+            }}
+            className="px-2 py-1 bg-red-500 mx-2 rounded-md"
+          >
+            Clear
+          </button>
         </div>
+
+        {/* Persenan Komisi AMS */}
         <div className="input-components">
           <label htmlFor="AMS">Komisi AMS : </label>
           <input
             type="number"
             id="AMS"
-            defaultValue={AMS}
+            value={komisiAMS}
+            placeholder="Komisi Ams % . . ."
             onChange={(e) => {
-              setAMS(e.target.value);
+              setKomisiAMS(e.target.value);
             }}
           />
-        </div>
-        <div>
           <button
-            onClick={calculate}
-            className="bg-green-600 hover:bg-green-500 px-2 py-1 rounded-md block mx-auto mt-3"
+            onClick={(e) => {
+              e.preventDefault();
+              setKomisiAMS("");
+            }}
+            className="px-2 py-1 bg-red-500 mx-2 rounded-md"
+          >
+            Clear
+          </button>
+        </div>
+        <div className="px-3 flex gap-x-2 mt-4">
+          <button
+            className="bg-red-600 hover:bg-red-400 px-2 py-1 rounded-md"
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("/");
+            }}
+          >
+            Kembali
+          </button>
+          <button
+            onClick={hitung}
+            className="bg-green-600 hover:bg-green-400 px-2 py-1 rounded-md"
           >
             Kalkulasikan
           </button>
@@ -84,14 +138,23 @@ const GaransiHargaTerbaik = () => {
       </form>
 
       <div className="border p-4">
-        <p>Admin Shopee Sebesar : {adminShopeeFinal.toLocaleString("id-ID")}</p>
         <p>
-          Komisi Affiliate Sebesar : {komisiAMSFinal.toLocaleString("id-ID")}
+          Admin Shopee Sebesar :{" "}
+          <b>{Math.floor(totalAdminShopee).toLocaleString("id-ID")}</b>
         </p>
-        <p>Penghasilan Akhir : {komisiFinal.toLocaleString("id-ID")}</p>
+        <p>
+          Komisi Affiliate Sebesar :{" "}
+          <b>{Math.floor(totalKomisiAMS).toLocaleString("id-ID")}</b>
+        </p>
+        <p>
+          Penghasilan Akhir :{" "}
+          <b>{Math.floor(totalKomisiSaya).toLocaleString("id-ID")}</b>
+        </p>
         <p>
           Penghasilan Setelah Dipotong Affiliate :{" "}
-          {komisiFinalAfterAMS.toLocaleString("id-ID")}
+          <b>
+            {Math.floor(totalKomisiSayaDipotongAMS).toLocaleString("id-ID")}
+          </b>
         </p>
       </div>
     </div>
