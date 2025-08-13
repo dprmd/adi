@@ -1,9 +1,9 @@
 import { createHashRouter, RouterProvider } from "react-router";
-import GaransiHargaTerbaik from "./pages/GaransiHargaTerbaik";
 import Home from "./pages/Home";
 import AlokasiPemasukan from "./pages/AlokasiPemasukan";
 import { Outlet } from "react-router";
 import { createBrowserHistory } from "history";
+import PerhitunganProfit from "./pages/PerhitunganProfit";
 
 const Root = () => {
   return <Outlet></Outlet>;
@@ -20,7 +20,7 @@ const router = createHashRouter([
     Component: Root,
     children: [
       { index: true, Component: Home },
-      { path: "GaransiHargaTerbaik", Component: GaransiHargaTerbaik },
+      { path: "PerhitunganProfit", Component: PerhitunganProfit },
       { path: "AlokasiPemasukan", Component: AlokasiPemasukan },
     ],
   },
