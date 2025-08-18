@@ -15,10 +15,16 @@ const patunganUntukEma = {
 
 const gajiPerHari = 50000;
 
+const kerjakah = {
+  ya: "Ya, Hari Ini Kamu Kerja",
+  tidak: "Tidak, Kamu Tidak Kerja Hari Ini",
+};
+
 const AlokasiPemasukan = () => {
   // State
   const navigate = useNavigate();
   const [sudahHitung, setSudahHitung] = useState(false);
+  const [kerja, setKerja] = useState(true);
 
   // Start
   const [totalPenarikanDana, setTotalPenarikanDana] = useState("");
@@ -43,9 +49,12 @@ const AlokasiPemasukan = () => {
     const untukAdeSiska =
       Number(totalPenarikanDana) -
       (patunganUntukEma.uko + Number(komisiKotor)) -
-      hutangUko -
-      gajiPerHari;
-    setUangAdeSiska(untukAdeSiska);
+      hutangUko;
+    if (kerja) {
+      setUangAdeSiska(untukAdeSiska - gajiPerHari);
+    } else {
+      setUangAdeSiska(untukAdeSiska);
+    }
 
     // Hitung Uang Untuk Ma Iki Dari Komisi Kotor
     const uangUntukMaIki = patunganUntukEma.uko + patunganUntukEma.adi;
@@ -171,6 +180,25 @@ const AlokasiPemasukan = () => {
           </button>
         </div>
 
+        <div className="input-components">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              setKerja(!kerja);
+            }}
+            className="px-2 py-1 bg-red-500 text-sm rounded-md mr-1"
+          >
+            Ubah
+          </button>
+          <span
+            className={`text-sm text-white px-2 py-1 rounded-md ${
+              kerja ? "bg-green-600" : "bg-red-600"
+            }`}
+          >
+            Gajian : {kerja ? kerjakah.ya : kerjakah.tidak}
+          </span>
+        </div>
+
         {/* Tombol Navigasi */}
         <div className="input-components">
           <button
@@ -204,7 +232,7 @@ const AlokasiPemasukan = () => {
                 Setor Untuk Ade Siska :{" "}
                 <b>{uangAdeSiska.toLocaleString("id-ID")}</b> (
                 <span className="text-gray-400 text-sm inline-block mx-1">
-                  UangAdeSiska - GajiPerHari - HutangUko
+                  UangAdeSiska - HutangUko {kerja ? "- Gaji Per Hari" : ""}
                 </span>
                 )
               </p>
@@ -230,17 +258,29 @@ const AlokasiPemasukan = () => {
                   <b>{uangAdeSiska.toLocaleString("id-ID")}</b>
                 </li>
 
+                {/* Hutang Uko */}
+                {Number(hutangUko) > 0 && (
+                  <li>
+                    Transfer Uang Bayar Hutang Uko Ke <b>SeaBank Haerudin</b>{" "}
+                    Sebesar <b>{hutangUko.toLocaleString("id-ID")}</b>
+                  </li>
+                )}
+
                 {/* Transfer Uang Pokok + Investasi + Ema Iki + Sedekah */}
                 <li>
-                  Transfer Uang (Pokok + Investasi + Ema Iki + Sedekah + Gaji
-                  Per Hari) Ke <b>SeaBank Haerudin</b> Sebesar{" "}
+                  Transfer Uang{" "}
+                  <span className="text-sm text-gray-400">
+                    (Pokok + Investasi + Ema Iki + Sedekah
+                    {kerja ? " + Gaji Perhari" : ""})
+                  </span>{" "}
+                  Ke <b>SeaBank Haerudin</b> Sebesar{" "}
                   <b>
                     {(
                       uangEmaIki +
                       uangPokok +
                       uangInvestasi +
                       uangUntukSedekah +
-                      gajiPerHari
+                      (kerja ? gajiPerHari : 0)
                     ).toLocaleString("id-ID")}
                   </b>
                 </li>
@@ -250,11 +290,13 @@ const AlokasiPemasukan = () => {
                   Catat Pemasukan Uang Pokok Sebesar{" "}
                   <b>{uangPokok.toLocaleString("id-ID")}</b>
                 </li>
-                <li>
-                  Catat Pemasukan Uang Pokok (
-                  <span className="text-gray-500 text-sm mx-1">Gaji</span>)
-                  Sebesar <b>{gajiPerHari.toLocaleString("id-ID")}</b>
-                </li>
+                {kerja && (
+                  <li>
+                    Catat Pemasukan Uang Pokok (
+                    <span className="text-gray-500 text-sm mx-1">Gaji</span>)
+                    Sebesar <b>{gajiPerHari.toLocaleString("id-ID")}</b>
+                  </li>
+                )}
                 <li>
                   Catat Pemasukan Uang Investasi Sebesar{" "}
                   <b>{uangInvestasi.toLocaleString("id-ID")}</b>

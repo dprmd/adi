@@ -11,3 +11,7 @@
 .input-components label {
   @apply block;
 }
+
+button {
+  @apply text-gray-100;
+}
