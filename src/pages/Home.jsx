@@ -3,7 +3,9 @@ import { Link } from "react-router";
 const Home = () => {
   return (
     <div>
-      <h3 className="text-center text-3xl my-4">Hallo Selamat Datang 😄</h3>
+      <h3 className="text-center text-3xl my-4 font-bold">
+        Hallo Selamat Datang 😄
+      </h3>
       <ul className="text-center flex flex-col gap-y-6 justify-center">
         <li>
           <Link

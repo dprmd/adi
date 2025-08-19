@@ -78,7 +78,7 @@ const PerhitunganProfit = () => {
   ];
 
   return (
-    <div className="flex justify-center items-center flex-col gap-y-3">
+    <div className="flex justify-center items-center flex-col gap-y-3 py-3">
       {/* dialog ubah admin shopee percent */}
       {ubahAdminShopee && (
         <div className="w-screen h-screen absolute top-0 left-0 flex justify-center items-center">
@@ -167,7 +167,7 @@ const PerhitunganProfit = () => {
       )}
 
       {/* Judul */}
-      <h3 className="text-center text-2xl mt-3">Perhitungan Profit Shopee</h3>
+      <h3 className="text-2xl font-bold">Perhitungan Profit Shopee</h3>
 
       <form className="border p-4">
         <div className="input-components w-full">

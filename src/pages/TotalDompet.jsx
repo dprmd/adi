@@ -44,7 +44,8 @@ const TotalDompet = () => {
     setSaldoEmaIki(totalUangEmaIkiHariIni);
   }, []);
   return (
-    <div className="flex justify-center items-center flex-col gap-y-3">
+    <div className="flex justify-center items-center flex-col gap-y-3 py-3">
+      <h1 className="font-bold text-2xl">Total Dompet</h1>
       <form className="border p-4">
         {/* Saldo Pokok */}
         <div className="input-components">

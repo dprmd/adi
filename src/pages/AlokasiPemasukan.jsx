@@ -82,8 +82,9 @@ const AlokasiPemasukan = () => {
   };
 
   return (
-    <div>
-      <form>
+    <div className="flex justify-center items-center flex-col py-3">
+      <h1 className="text-2xl font-bold">Alokasi Pemasukan</h1>
+      <form className="border w-max mx-auto mt-3 p-4">
         {/* Total Penarikan Dana */}
         <div className="input-components">
           <label className="block" htmlFor="totalPenarikanDana">
