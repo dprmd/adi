@@ -23,14 +23,6 @@ const Home = () => {
             Alokasi Pemasukan
           </Link>
         </li>
-        <li>
-          <Link
-            to="TotalDompet"
-            className="bg-green-400 text-black px-4 py-2 rounded-xl hover:bg-green-300"
-          >
-            Total Dompet
-          </Link>
-        </li>
       </ul>
     </div>
   );

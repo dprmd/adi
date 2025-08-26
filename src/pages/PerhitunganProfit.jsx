@@ -2,25 +2,43 @@ import { useEffect } from "react";
 ``;
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import DialogUbahValue from "../components/DialogUbahValue";
+import { formatNumber, raw, validateNumber } from "../utils/generalFunction";
+
+// Helper Function
+const percentFrom = (percent, total) => {
+  return (percent / 100) * total;
+};
 
 const PerhitunganProfit = () => {
   // State
   const navigate = useNavigate();
+  const [sudahHitung, setSudahHitung] = useState(false);
+
+  // Perubahan Data
   const [perubahanAdminShopee, setPerubahanAdminShopee] = useState("");
-  const [ubahAdminShopee, setUbahAdminShopee] = useState(false);
   const [perubahanAdminPromoExtra, setPerubahanAdminPromoExtra] = useState("");
+  const [perubahanAdminGratisOngkirExtra, setPerubahanAdminGratisOngkirExtra] =
+    useState("");
+  const [perubahanKomisiAMS, setPerubahanKomisiAMS] = useState("");
+  // State Untuk Menutup dan Membuka Dialog
+  const [ubahAdminShopee, setUbahAdminShopee] = useState(false);
   const [ubahAdminPromoExtra, setUbahAdminPromoExtra] = useState(false);
+  const [ubahAdminGratisOngkirExtra, setUbahAdminGratisOngkirExtra] =
+    useState(false);
+  const [ubahKomisiAMS, setUbahKomisiAMS] = useState(false);
 
   // Admin Shopee
   const biayaPerPesanan = 1250;
   const biayaPengiriman = 350;
   const [adminShopee, setAdminShopee] = useState(8);
   const [adminPromoExtra, setAdminPromoExtra] = useState(2);
+  const [adminGratisOngkirExtra, setAdminGratisOngkirExtra] = useState(5);
+  const [komisiAMS, setKomisiAMS] = useState(10);
 
   // Input
   const [hargaJual, setHargaJual] = useState("");
   const [voucher, setVoucher] = useState("0");
-  const [komisiAMS, setKomisiAMS] = useState("0");
 
   // Output
   const [totalKomisiSaya, setTotalKomisiSaya] = useState(0);
@@ -32,41 +50,74 @@ const PerhitunganProfit = () => {
   const hitung = (e) => {
     e.preventDefault();
     const totalAdmin =
-      ((adminShopee + adminPromoExtra) / 100) * Number(hargaJual) +
+      Math.round(
+        percentFrom(
+          adminShopee + adminPromoExtra + adminGratisOngkirExtra,
+          raw(hargaJual)
+        )
+      ) +
       biayaPerPesanan +
       biayaPengiriman;
-    const hargaFinal = Number(hargaJual) - totalAdmin - Number(voucher);
-    const totalKomisiAMSDidapat = (komisiAMS / 100) * hargaFinal;
+    const hargaFinal = raw(hargaJual) - totalAdmin - raw(voucher);
+    const totalKomisiAMSDidapat = percentFrom(komisiAMS, raw(hargaJual));
 
     setTotalKomisiSaya(hargaFinal);
     setTotalAdminShopee(totalAdmin);
     setTotalKomisiAMS(totalKomisiAMSDidapat);
     setTotalKomisiSayaDipotongAMS(hargaFinal - totalKomisiAMSDidapat);
+    setSudahHitung(true);
+  };
+
+  const localStorageInit = (
+    localStorageIdentifier,
+    realValueSetterFunc,
+    tempValueSetterFunc,
+    initValue
+  ) => {
+    if (localStorage.getItem(localStorageIdentifier)) {
+      const value = localStorage.getItem(localStorageIdentifier);
+      realValueSetterFunc(Number(value));
+      tempValueSetterFunc(value);
+    } else {
+      localStorage.setItem(localStorageIdentifier, initValue);
+    }
   };
 
   useEffect(() => {
-    // localStorage Checker
-    if (localStorage.getItem("adminShopee")) {
-      const adminShopee = localStorage.getItem("adminShopee");
-      setAdminShopee(Number(adminShopee));
-      setPerubahanAdminShopee(adminShopee);
-    } else {
-      localStorage.setItem("adminShopee", "9");
-    }
-
-    if (localStorage.getItem("adminPromoExtra")) {
-      const adminPromoExtra = localStorage.getItem("adminPromoExtra");
-      setAdminPromoExtra(Number(adminPromoExtra));
-      setPerubahanAdminPromoExtra(adminPromoExtra);
-    } else {
-      localStorage.setItem("adminPromoExtra", "2");
-    }
+    // localStorage Init
+    localStorageInit(
+      "adminShopee",
+      setAdminShopee,
+      setPerubahanAdminShopee,
+      "8"
+    );
+    localStorageInit(
+      "adminPromoExtra",
+      setAdminPromoExtra,
+      setPerubahanAdminPromoExtra,
+      "2"
+    );
+    localStorageInit(
+      "adminGratisOngkirExtra",
+      setAdminGratisOngkirExtra,
+      setPerubahanAdminGratisOngkirExtra,
+      "5"
+    );
+    localStorageInit("komisiAMS", setKomisiAMS, setPerubahanKomisiAMS, "10");
   }, []);
 
   // Html Css Data
   const keterangan = [
     { label: "Admin Shopee", value: `${adminShopee} %` },
     { label: "Admin Promo Extra", value: `${adminPromoExtra} %` },
+    {
+      label: "Admin Gratis Ongkir Extra",
+      value: `${adminGratisOngkirExtra} %`,
+    },
+    {
+      label: "Komisi Affiliate",
+      value: `${komisiAMS} %`,
+    },
     {
       label: "Biaya Per Pesanan",
       value: `Rp ${biayaPerPesanan.toLocaleString("id-ID")}`,
@@ -78,146 +129,128 @@ const PerhitunganProfit = () => {
   ];
 
   return (
-    <div className="flex justify-center items-center flex-col gap-y-3 py-3">
+    <div className="flex justify-center items-center flex-col gap-y-3 py-3 mx-2">
       {/* dialog ubah admin shopee percent */}
       {ubahAdminShopee && (
-        <div className="w-screen h-screen absolute top-0 left-0 flex justify-center items-center">
-          <form className="border bg-white p-4 rounded-xl w-[400px]">
-            <div className="input-components flex flex-col gap-y-2">
-              <label htmlFor="ubahAdminShopee">Masukan Admin Shopee Mu</label>
-              <input
-                type="text"
-                id="ubahAdminShopee"
-                className="border px-1"
-                placeholder="Masukan Admin Shopee Kamu . . ."
-                onChange={(e) => {
-                  setPerubahanAdminShopee(e.target.value);
-                }}
-              />
-              <div className="flex gap-x-2 items-center">
-                <button
-                  className="w-full px-2 py-1 text-white rounded-md bg-red-700 hover:bg-red-600"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setUbahAdminShopee(false);
-                  }}
-                >
-                  Batal
-                </button>
-                <button
-                  className="w-full px-2 py-1 text-white rounded-md bg-green-700 hover:bg-green-600"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    localStorage.setItem("adminShopee", perubahanAdminShopee);
-                    setAdminShopee(Number(perubahanAdminShopee));
-                    setUbahAdminShopee(false);
-                  }}
-                >
-                  Ubah
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
+        <DialogUbahValue
+          title="Ubah Admin Shopee"
+          changeOpenStateFunction={setUbahAdminShopee}
+          changeValueFunction={setPerubahanAdminShopee}
+          localStorageIdentifier="adminShopee"
+          realStateChangeFunction={setAdminShopee}
+          valueState={perubahanAdminShopee}
+        />
       )}
       {ubahAdminPromoExtra && (
-        <div className="w-screen h-screen absolute top-0 left-0 flex justify-center items-center">
-          <form className="border bg-white p-4 rounded-xl w-[400px]">
-            <div className="input-components flex flex-col gap-y-2">
-              <label htmlFor="ubahAdminPromoExtra">
-                Masukan Admin Promo Extra Mu
-              </label>
-              <input
-                type="text"
-                id="ubahAdminPromoExtra"
-                className="border px-1"
-                placeholder="Masukan Admin Promo Extra Kamu . . ."
-                onChange={(e) => {
-                  setPerubahanAdminPromoExtra(e.target.value);
-                }}
-              />
-              <div className="flex gap-x-2 items-center">
-                <button
-                  className="w-full px-2 py-1 text-white rounded-md bg-red-700 hover:bg-red-600"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setUbahAdminPromoExtra(false);
-                  }}
-                >
-                  Batal
-                </button>
-                <button
-                  className="w-full px-2 py-1 text-white rounded-md bg-green-700 hover:bg-green-600"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    localStorage.setItem(
-                      "adminPromoExtra",
-                      perubahanAdminPromoExtra
-                    );
-                    setAdminPromoExtra(Number(perubahanAdminPromoExtra));
-                    setUbahAdminPromoExtra(false);
-                  }}
-                >
-                  Ubah
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
+        <DialogUbahValue
+          title="Ubah Admin Promo Extra"
+          changeOpenStateFunction={setUbahAdminPromoExtra}
+          changeValueFunction={setPerubahanAdminPromoExtra}
+          localStorageIdentifier="adminPromoExtra"
+          realStateChangeFunction={setAdminPromoExtra}
+          valueState={perubahanAdminPromoExtra}
+        />
+      )}
+      {ubahAdminGratisOngkirExtra && (
+        <DialogUbahValue
+          title="Ubah Admin Gratis Ongkir Extra"
+          changeOpenStateFunction={setUbahAdminGratisOngkirExtra}
+          changeValueFunction={setPerubahanAdminGratisOngkirExtra}
+          localStorageIdentifier="adminGratisOngkirExtra"
+          realStateChangeFunction={setAdminGratisOngkirExtra}
+          valueState={perubahanAdminGratisOngkirExtra}
+        />
+      )}
+      {ubahKomisiAMS && (
+        <DialogUbahValue
+          title="Ubah Komisi Affiliate"
+          changeOpenStateFunction={setUbahKomisiAMS}
+          changeValueFunction={setPerubahanKomisiAMS}
+          localStorageIdentifier="komisiAMS"
+          realStateChangeFunction={setKomisiAMS}
+          valueState={perubahanKomisiAMS}
+        />
       )}
 
       {/* Judul */}
       <h3 className="text-2xl font-bold">Perhitungan Profit Shopee</h3>
 
-      <form className="border p-4">
+      <form
+        className="border border-gray-400 rounded-md pb-4"
+        onSubmit={hitung}
+      >
         <div className="input-components w-full">
-          {keterangan.map((item, index) => (
-            <div className="flex justify-between gap-x-10">
-              <span>{item.label}</span>
-              <span>
-                {item.value}
-                {index === 0 && (
-                  <i
-                    class="bi bi-pencil ml-2 hover:bg-black hover:text-white p-1 rounded-md"
-                    onClick={() => {
-                      setUbahAdminShopee(true);
-                    }}
-                  ></i>
-                )}
-                {index === 1 && (
-                  <i
-                    class="bi bi-pencil ml-2 hover:bg-black hover:text-white p-1 rounded-md"
-                    onClick={() => {
-                      setUbahAdminPromoExtra(true);
-                    }}
-                  ></i>
-                )}
-              </span>
-            </div>
-          ))}
+          {/* Pengisian Sebelum Menghitung */}
+          <div className="text-center">
+            <h2 className="font-bold">PENTING DI ISI</h2>
+            <small className="text-sm text-gray-500">
+              Klik Ikon Pensil Untuk Mengubah
+            </small>
+          </div>
+          {/* Hitung */}
+          <div className="border border-gray-400 rounded-md px-2 py-1">
+            {keterangan.map((item, index) => (
+              <div className="flex justify-between gap-x-10">
+                <span>{item.label}</span>
+                <span className="font-bold">
+                  {item.value}
+                  {/* Pencil Ikon Untuk Ubah Admin Shopee */}
+                  {index === 0 && (
+                    <i
+                      class="bi bi-pencil ml-2 hover:bg-black hover:text-white p-1 rounded-md"
+                      onClick={() => {
+                        setUbahAdminShopee(true);
+                      }}
+                    ></i>
+                  )}
+                  {/* Pencil Ikon Untuk Ubah Admin Promo Extra */}
+                  {index === 1 && (
+                    <i
+                      class="bi bi-pencil ml-2 hover:bg-black hover:text-white p-1 rounded-md"
+                      onClick={() => {
+                        setUbahAdminPromoExtra(true);
+                      }}
+                    ></i>
+                  )}
+                  {/* Pencil Ikon Untuk Ubah Admin Gratis Ongkir Extra */}
+                  {index === 2 && (
+                    <i
+                      class="bi bi-pencil ml-2 hover:bg-black hover:text-white p-1 rounded-md"
+                      onClick={() => {
+                        setUbahAdminGratisOngkirExtra(true);
+                      }}
+                    ></i>
+                  )}
+                  {/* Pencil Ikon Untuk Ubah Komisi AMS */}
+                  {index === 3 && (
+                    <i
+                      class="bi bi-pencil ml-2 hover:bg-black hover:text-white p-1 rounded-md"
+                      onClick={() => {
+                        setUbahKomisiAMS(true);
+                      }}
+                    ></i>
+                  )}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Harga Jual */}
         <div className="input-components">
           <label htmlFor="HargaJual">Harga Jual : </label>
           <input
-            type="number"
+            type="text"
             id="HargaJual"
             value={hargaJual}
+            required={true}
+            className="max-w-[200px]"
             placeholder="Isi Harga Jual . . ."
             onChange={(e) => {
-              setHargaJual(e.target.value);
+              const number = validateNumber(e);
+              setHargaJual(formatNumber(number));
             }}
           />
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              setHargaJual("");
-            }}
-            className="px-2 py-1 bg-red-500 mx-2 rounded-md"
-          >
-            Clear
-          </button>
         </div>
 
         {/* Voucher */}
@@ -227,58 +260,28 @@ const PerhitunganProfit = () => {
             type="number"
             id="voucher"
             value={voucher}
+            className="max-w-[200px]"
             placeholder="Masukan Voucher . . ."
             onChange={(e) => {
-              setVoucher(e.target.value);
+              const number = validateNumber(e);
+              setVoucher(formatNumber(number));
             }}
           />
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              setVoucher("");
-            }}
-            className="px-2 py-1 bg-red-500 mx-2 rounded-md"
-          >
-            Clear
-          </button>
-        </div>
-
-        {/* Persenan Komisi AMS */}
-        <div className="input-components">
-          <label htmlFor="AMS">Komisi AMS : </label>
-          <input
-            type="number"
-            id="AMS"
-            value={komisiAMS}
-            placeholder="Komisi Ams % . . ."
-            onChange={(e) => {
-              setKomisiAMS(e.target.value);
-            }}
-          />
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              setKomisiAMS("");
-            }}
-            className="px-2 py-1 bg-red-500 mx-2 rounded-md"
-          >
-            Clear
-          </button>
         </div>
 
         {/* Button */}
         <div className="px-3 flex gap-x-2 mt-4">
           <button
+            type="button"
             className="bg-red-600 hover:bg-red-400 px-2 py-1 rounded-md"
-            onClick={(e) => {
-              e.preventDefault();
+            onClick={() => {
               navigate("/");
             }}
           >
             Kembali
           </button>
           <button
-            onClick={hitung}
+            type="submit"
             className="bg-green-600 hover:bg-green-400 px-2 py-1 rounded-md"
           >
             Kalkulasikan
@@ -286,26 +289,56 @@ const PerhitunganProfit = () => {
         </div>
       </form>
 
-      <div className="border p-4">
-        <p>
-          Admin Shopee Sebesar :{" "}
-          <b>{Math.floor(totalAdminShopee).toLocaleString("id-ID")}</b>
-        </p>
-        <p>
-          Komisi Affiliate Sebesar :{" "}
-          <b>{Math.floor(totalKomisiAMS).toLocaleString("id-ID")}</b>
-        </p>
-        <p>
-          Penghasilan Akhir :{" "}
-          <b>{Math.floor(totalKomisiSaya).toLocaleString("id-ID")}</b>
-        </p>
-        <p>
-          Penghasilan Setelah Dipotong Affiliate :{" "}
-          <b>
-            {Math.floor(totalKomisiSayaDipotongAMS).toLocaleString("id-ID")}
-          </b>
-        </p>
-      </div>
+      {sudahHitung && (
+        <div className="border border-gray-400 rounded-md p-4">
+          <p>
+            <div className="flex flex-col text-gray-500 text-[12px]">
+              <small>
+                Biaya Admin Star : Rp{" "}
+                {Math.round(
+                  percentFrom(adminShopee, Number(hargaJual))
+                ).toLocaleString("id-ID")}
+              </small>
+              <small>
+                Biaya Admin Promo Extra : Rp{" "}
+                {Math.ceil(
+                  percentFrom(adminPromoExtra, Number(hargaJual))
+                ).toLocaleString("id-ID")}
+              </small>
+              <small>
+                Biaya Admin Gratis Ongkir Extra : Rp{" "}
+                {Math.round(
+                  percentFrom(adminGratisOngkirExtra, Number(hargaJual))
+                ).toLocaleString("id-ID")}
+              </small>
+              <small>
+                Biaya Per Pesanan : Rp{" "}
+                {Math.round(biayaPerPesanan).toLocaleString("id-ID")}
+              </small>
+              <small>
+                Biaya Program Hemat Kirim : Rp{" "}
+                {Math.round(biayaPengiriman).toLocaleString("id-ID")}
+              </small>
+            </div>
+            Total Biaya Admin Shopee Sebesar :{" "}
+            <b>{Math.round(totalAdminShopee).toLocaleString("id-ID")}</b>
+          </p>
+          <p>
+            Komisi Affiliate :{" "}
+            <b>{Math.round(totalKomisiAMS).toLocaleString("id-ID")}</b>
+          </p>
+          <p>
+            Penghasilan Akhir :{" "}
+            <b>{Math.round(totalKomisiSaya).toLocaleString("id-ID")}</b>
+          </p>
+          <p>
+            Penghasilan Setelah Dipotong Affiliate :{" "}
+            <b>
+              {Math.round(totalKomisiSayaDipotongAMS).toLocaleString("id-ID")}
+            </b>
+          </p>
+        </div>
+      )}
     </div>
   );
 };

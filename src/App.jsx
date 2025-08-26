@@ -4,7 +4,6 @@ import AlokasiPemasukan from "./pages/AlokasiPemasukan";
 import { Outlet } from "react-router";
 import { createBrowserHistory } from "history";
 import PerhitunganProfit from "./pages/PerhitunganProfit";
-import TotalDompet from "./pages/TotalDompet";
 
 const Root = () => {
   return <Outlet></Outlet>;
@@ -23,7 +22,6 @@ const router = createHashRouter([
       { index: true, Component: Home },
       { path: "PerhitunganProfit", Component: PerhitunganProfit },
       { path: "AlokasiPemasukan", Component: AlokasiPemasukan },
-      { path: "TotalDompet", Component: TotalDompet },
     ],
   },
   { history },
