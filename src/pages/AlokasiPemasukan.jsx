@@ -91,7 +91,7 @@ const AlokasiPemasukan = () => {
         onSubmit={hitungSekarang}
       >
         <div className="flex items-center justify-between input-components">
-          <span>Saya Kerja Hari</span>
+          <span>Kerja Hari Ini</span>
           <button
             type="button"
             onClick={() => {

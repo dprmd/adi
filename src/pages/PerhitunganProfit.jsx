@@ -120,11 +120,11 @@ const PerhitunganProfit = () => {
     },
     {
       label: "Biaya Per Pesanan",
-      value: `Rp ${biayaPerPesanan.toLocaleString("id-ID")}`,
+      value: `Rp ${formatNumber(biayaPerPesanan)}`,
     },
     {
       label: "Biaya Program Hemat Biaya Kirim",
-      value: `Rp ${biayaPengiriman.toLocaleString("id-ID")}`,
+      value: `Rp ${formatNumber(biayaPengiriman)}`,
     },
   ];
 
@@ -295,47 +295,48 @@ const PerhitunganProfit = () => {
             <div className="flex flex-col text-gray-500 text-[12px]">
               <small>
                 Biaya Admin Star : Rp{" "}
-                {Math.round(
-                  percentFrom(adminShopee, Number(hargaJual))
-                ).toLocaleString("id-ID")}
+                {formatNumber(
+                  Math.round(percentFrom(adminShopee, raw(hargaJual)))
+                )}
               </small>
               <small>
                 Biaya Admin Promo Extra : Rp{" "}
-                {Math.ceil(
-                  percentFrom(adminPromoExtra, Number(hargaJual))
-                ).toLocaleString("id-ID")}
+                {formatNumber(
+                  Math.round(percentFrom(adminPromoExtra, raw(hargaJual)))
+                )}
               </small>
               <small>
                 Biaya Admin Gratis Ongkir Extra : Rp{" "}
-                {Math.round(
-                  percentFrom(adminGratisOngkirExtra, Number(hargaJual))
-                ).toLocaleString("id-ID")}
+                {formatNumber(
+                  Math.round(
+                    percentFrom(adminGratisOngkirExtra, raw(hargaJual))
+                  )
+                )}
               </small>
               <small>
                 Biaya Per Pesanan : Rp{" "}
-                {Math.round(biayaPerPesanan).toLocaleString("id-ID")}
+                {formatNumber(Math.round(biayaPerPesanan))}
               </small>
               <small>
                 Biaya Program Hemat Kirim : Rp{" "}
-                {Math.round(biayaPengiriman).toLocaleString("id-ID")}
+                {formatNumber(Math.round(biayaPengiriman))}
               </small>
             </div>
-            Total Biaya Admin Shopee Sebesar :{" "}
-            <b>{Math.round(totalAdminShopee).toLocaleString("id-ID")}</b>
+            <span>
+              Total Admin Shopee Sebesar{" "}
+              <b>{formatNumber(Math.round(totalAdminShopee))}</b>
+            </span>
           </p>
           <p>
-            Komisi Affiliate :{" "}
-            <b>{Math.round(totalKomisiAMS).toLocaleString("id-ID")}</b>
+            Komisi Affiliate : <b>{formatNumber(Math.round(totalKomisiAMS))}</b>
           </p>
           <p>
             Penghasilan Akhir :{" "}
-            <b>{Math.round(totalKomisiSaya).toLocaleString("id-ID")}</b>
+            <b>{formatNumber(Math.round(totalKomisiSaya))}</b>
           </p>
           <p>
             Penghasilan Setelah Dipotong Affiliate :{" "}
-            <b>
-              {Math.round(totalKomisiSayaDipotongAMS).toLocaleString("id-ID")}
-            </b>
+            <b>{formatNumber(Math.round(totalKomisiSayaDipotongAMS))}</b>
           </p>
         </div>
       )}
