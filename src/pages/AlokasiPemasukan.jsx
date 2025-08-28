@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { formatNumber, raw, validateNumber } from "../utils/generalFunction";
+import WordInBracket from "../components/WordInBracket";
 
 // Harus Ada Total 100
 const metode = {
@@ -11,6 +12,7 @@ const metode = {
   sedekah: 1,
 };
 
+// Patungan Untuk Uang Harian Ema Iki
 const patunganUntukEma = {
   uko: 50000,
   adi: 8000,
@@ -23,10 +25,10 @@ const AlokasiPemasukan = () => {
   const navigate = useNavigate();
   const [sudahHitung, setSudahHitung] = useState(false);
   const [kerja, setKerja] = useState(true);
+  const [simpleMode, setSimpleMode] = useState(true);
 
   // Start
   const [totalPenghasilanShopee, setTotalPenghasilanShopee] = useState("");
-  const [sisaUangJajan, setSisaUangJajan] = useState("0");
   const [hutangUko, setHutangUko] = useState("0");
   const [komisiKotor, setKomisiKotor] = useState("");
   const [komisiBersih, setKomisiBersih] = useState(0);
@@ -38,7 +40,7 @@ const AlokasiPemasukan = () => {
   const [uangPokok, setUangPokok] = useState(0);
   const [uangInvestasi, setUangInvestasi] = useState(0);
   const [uangJajan, setUangJajan] = useState(0);
-  const [uangHutang, setUangHutang] = useState(0);
+  const [uangHutangIbuEuis, setUangHutangIbuEuis] = useState(0);
 
   // Function
   const hitungSekarang = (e) => {
@@ -54,8 +56,6 @@ const AlokasiPemasukan = () => {
     } else {
       setUangAdeSiska(untukAdeSiska);
     }
-
-    console.log(typeof raw(komisiKotor));
 
     // Hitung Uang Untuk Ma Iki Dari Komisi Kotor
     const uangUntukMaIki = patunganUntukEma.uko + patunganUntukEma.adi;
@@ -77,7 +77,7 @@ const AlokasiPemasukan = () => {
     setUangPokok(Math.round((metode.kebutuhanPokok / 100) * totalKomisiBersih));
     setUangInvestasi(Math.round((metode.investasi / 100) * totalKomisiBersih));
     setUangJajan(Math.round((metode.keinginan / 100) * totalKomisiBersih));
-    setUangHutang(Math.round((metode.hutang / 100) * totalKomisiBersih));
+    setUangHutangIbuEuis(Math.round((metode.hutang / 100) * totalKomisiBersih));
 
     // Render
     setSudahHitung(true);
@@ -90,6 +90,7 @@ const AlokasiPemasukan = () => {
         className="border border-slate-400 rounded-md w-max mx-auto mt-3 p-4 max-w-[400px]"
         onSubmit={hitungSekarang}
       >
+        {/* Tombol On Off Kerja */}
         <div className="flex items-center justify-between input-components">
           <span>Kerja Hari Ini</span>
           <button
@@ -105,7 +106,26 @@ const AlokasiPemasukan = () => {
             <span className="inline-block w-[25px] h-[25px] bg-black rounded-full"></span>
           </button>
         </div>
-        {/* Total Penarikan Dana */}
+
+        {/* Tombol On Off Mode Simple */}
+        <div className="flex items-center justify-between input-components">
+          <span>Mode Simple</span>
+          <button
+            type="button"
+            onClick={() => {
+              setSimpleMode(!simpleMode);
+            }}
+            className={`w-[45px] h-[25px] rounded-full flex ${
+              simpleMode
+                ? "bg-green-400 justify-end"
+                : "bg-slate-300 justify-start"
+            }`}
+          >
+            <span className="inline-block w-[25px] h-[25px] bg-black rounded-full"></span>
+          </button>
+        </div>
+
+        {/* Input Total Penarikan Dana */}
         <div className="input-components">
           <label className="block" htmlFor="totalPenghasilanShopee">
             Masukan Total Penghasilan :
@@ -122,7 +142,7 @@ const AlokasiPemasukan = () => {
           />
         </div>
 
-        {/* Komisi Kotor */}
+        {/* Input Komisi Kotor */}
         <div className="input-components">
           <label className="block" htmlFor="komisiKotor">
             Masukan Komisi Kotor :
@@ -139,23 +159,7 @@ const AlokasiPemasukan = () => {
           />
         </div>
 
-        {/* Sisa Uang Jajan */}
-        <div className="input-components">
-          <label className="block" htmlFor="sisaUangJajanSaatIni">
-            Masukan Sisa Uang Jajan Saat Ini :
-          </label>
-          <input
-            type="text"
-            value={sisaUangJajan}
-            onChange={(e) => {
-              const number = validateNumber(e);
-              setSisaUangJajan(formatNumber(number));
-            }}
-            placeholder="Isi di sini . . ."
-          />
-        </div>
-
-        {/* Hutang Uko */}
+        {/* Input Hutang Uko */}
         <div className="input-components">
           <label className="block" htmlFor="hutangUko">
             Hutang Uko (Jika Ada) :
@@ -193,6 +197,7 @@ const AlokasiPemasukan = () => {
         </div>
       </form>
 
+      {/* Tampilkan Saat Tombol Hitung Di Tekan */}
       {sudahHitung && (
         <div className="border border-gray-400 rounded-md p-4 mt-4 flex flex-col gap-y-4 mx-2">
           <div>
@@ -206,35 +211,37 @@ const AlokasiPemasukan = () => {
               Komisi Kotor : <b>{formatNumber(komisiKotor)}</b>
             </p>
             <p>
-              Setor Untuk Ade Siska : <b>{formatNumber(uangAdeSiska)}</b> (
-              <span className="text-gray-400 text-sm inline-block mx-1">
-                Total Penghasilan - Komisi Kotor - Patungan Ema{" "}
-                {kerja ? "- Gaji Per Hari" : ""}{" "}
-                {raw(hutangUko) > 0 ? " - Hutang Uko" : ""}
-              </span>
-              )
+              Setor Untuk Ade Siska : <b>{formatNumber(uangAdeSiska)}</b>
+              {!simpleMode && (
+                <WordInBracket
+                  kalimat={`Total Penghasilan - Komisi Kotor - Patungan Ema
+                    ${kerja ? "- Gaji Per Hari" : ""}
+                    ${raw(hutangUko) > 0 ? " - Hutang Uko" : ""}`}
+                />
+              )}
             </p>
             <p>
               Uang Untuk Ema Iki : <b>{formatNumber(uangEmaIki)}</b>
-              <span className="mx-1">
-                (
-                <span className="text-gray-400 text-sm inline-block mx-1">
-                  Uko {formatNumber(patunganUntukEma.uko)} + Adi{" "}
-                  {formatNumber(patunganUntukEma.adi)}
-                </span>
-                )
-              </span>
+              {!simpleMode && (
+                <WordInBracket
+                  kalimat={`Uko ${formatNumber(
+                    patunganUntukEma.uko
+                  )} + Adi ${formatNumber(patunganUntukEma.adi)}`}
+                />
+              )}
             </p>
             <p>
               Uang Untuk Sedekah : <b>{formatNumber(uangUntukSedekah)}</b>
-              <span className="mx-1">
-                (
-                <span className="text-gray-400 text-sm inline-block mx-1">
-                  {metode.sedekah}% x{" "}
-                  {formatNumber(raw(komisiKotor) - patunganUntukEma.adi)}
+              {!simpleMode && (
+                <span className="mx-1">
+                  <span>(</span>
+                  <span className="text-gray-400 text-sm inline-block mx-1">
+                    {metode.sedekah}% x{" "}
+                    {formatNumber(raw(komisiKotor) - patunganUntukEma.adi)}
+                  </span>
+                  <span>)</span>
                 </span>
-                )
-              </span>
+              )}
             </p>
             <p>
               Komisi Bersih : <b>{formatNumber(komisiBersih)}</b>
@@ -247,26 +254,30 @@ const AlokasiPemasukan = () => {
             <b className="text-lg">Yang Dilakukan Selanjutnya</b>
             <ol className="list-decimal ml-6">
               {/* Transfer Ke Ade Siska */}
-              <li>
-                Transfer Uang Ke <b>SeaBank Ade Siska</b> Sebesar{" "}
-                <b>{formatNumber(uangAdeSiska)}</b>
-              </li>
-
-              {/* Hutang Uko */}
-              {raw(hutangUko) > 0 && (
+              {simpleMode ? (
+                // Simple Mode
                 <li>
-                  Transfer Uang Bayar Hutang Uko Ke <b>SeaBank Haerudin</b>{" "}
-                  Sebesar <b>{formatNumber(hutangUko)}</b>
+                  Transfer Ke <b>SeaBank Ade Siska</b> Sebesar{" "}
+                  <b>{formatNumber(uangAdeSiska)}</b>
+                </li>
+              ) : (
+                // Ribet Mode
+                <li>
+                  Transfer Uang Ke <b>SeaBank Ade Siska</b> Sebesar{" "}
+                  <b>{formatNumber(uangAdeSiska)}</b>
                 </li>
               )}
 
-              {/* Transfer Uang Pokok + Investasi + Ema Iki + Sedekah */}
+              {/* Transfer Uang Pokok + Investasi + Ema Iki + Sedekah + Hutang Ibu Euis*/}
               <li>
-                Transfer Uang{" "}
-                <span className="text-sm text-gray-400">
-                  (Pokok + Investasi + Ema Iki + Sedekah + Hutang
-                  {kerja ? " + Gaji Perhari" : ""})
-                </span>{" "}
+                {simpleMode ? "Transfer" : "Transfer Uang"}{" "}
+                {!simpleMode && (
+                  <WordInBracket
+                    kalimat={`Pokok + Investasi + Ema Iki + Sedekah + Hutang Ibu Euis ${
+                      raw(hutangUko) > 0 ? " + Hutang Uko" : ""
+                    } ${kerja ? " + Gaji Perhari" : ""}`}
+                  />
+                )}{" "}
                 Ke <b>SeaBank Haerudin</b> Sebesar{" "}
                 <b>
                   {formatNumber(
@@ -274,46 +285,113 @@ const AlokasiPemasukan = () => {
                       uangPokok +
                       uangInvestasi +
                       uangUntukSedekah +
-                      uangHutang +
+                      uangHutangIbuEuis +
+                      (raw(hutangUko) > 0 ? raw(hutangUko) : 0) +
                       (kerja ? gajiPerHari : 0)
                   )}
                 </b>
               </li>
 
               {/* Catat Pemasukan Ke Pokok */}
-              <li>
-                Catat Pemasukan Uang Pokok Sebesar{" "}
-                <b>{formatNumber(uangPokok)}</b>
-              </li>
-              {kerja && (
+              {!simpleMode && (
+                <>
+                  <li>
+                    Catat Pemasukan Uang Pokok Sebesar{" "}
+                    <b>{formatNumber(uangPokok)}</b>
+                  </li>
+                  <li>
+                    Catat Pemasukan Uang Pokok
+                    <WordInBracket kalimat={"Gaji"} />
+                    Sebesar <b>{formatNumber(gajiPerHari)}</b>
+                  </li>
+                  {raw(hutangUko) > 0 && (
+                    <li>
+                      Catat Pemasukan Uang Pokok
+                      <WordInBracket kalimat={"Hutang Uko"} />
+                      Sebesar <b>{formatNumber(raw(hutangUko))}</b>
+                    </li>
+                  )}
+                  <li>
+                    Catat Pemasukan Uang Investasi Sebesar{" "}
+                    <b>{formatNumber(uangInvestasi)}</b>
+                  </li>
+                  <li>
+                    Catat Pemasukan Uang Jajan Sebesar{" "}
+                    <b>{formatNumber(uangJajan)}</b>
+                  </li>
+                  <li>
+                    Catat Pemasukan Uang Hutang Ibu Euis Sebesar{" "}
+                    <b>{formatNumber(uangHutangIbuEuis)}</b>
+                  </li>
+                  <li>
+                    Catat Pemasukan Uang Sedekah Sebesar{" "}
+                    <b>{formatNumber(uangUntukSedekah)}</b>
+                  </li>
+                  <li>
+                    Catat Pemasukan Uang Ema Iki Sebesar{" "}
+                    <b>
+                      {formatNumber(
+                        patunganUntukEma.uko + patunganUntukEma.adi
+                      )}
+                    </b>
+                  </li>
+                </>
+              )}
+              {simpleMode && (
                 <li>
-                  Catat Pemasukan Uang Pokok (
-                  <span className="text-gray-500 text-sm mx-1">Gaji</span>)
-                  Sebesar <b>{formatNumber(gajiPerHari)}</b>
+                  Catat Ke Aplikasi Keuangan :
+                  <ol className="simplemodetransfer list-inside">
+                    <li>
+                      <span>Rekening Pokok</span>{" "}
+                      <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
+                      <b>{formatNumber(uangPokok)}</b>
+                    </li>
+                    <li>
+                      <span>
+                        Rekening Pokok
+                        <WordInBracket kalimat={"Gaji"} />
+                      </span>
+                      <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
+                      <b>{formatNumber(gajiPerHari)}</b>
+                    </li>
+                    {raw(hutangUko) > 0 && (
+                      <li>
+                        <span>
+                          Rekening Pokok
+                          <WordInBracket kalimat={"Hutang Uko"} />
+                        </span>
+                        <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
+                        <b>{formatNumber(raw(hutangUko))}</b>
+                      </li>
+                    )}
+                    <li>
+                      <span>Rekening Investasi</span>
+                      <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
+                      <b>{formatNumber(uangInvestasi)}</b>
+                    </li>
+                    <li>
+                      <span>Rekening Jajan</span>
+                      <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
+                      <b>{formatNumber(uangJajan)}</b>
+                    </li>
+                    <li>
+                      <span>Rekening Hutang Ibu Euis</span>
+                      <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
+                      <b>{formatNumber(uangHutangIbuEuis)}</b>
+                    </li>
+                    <li>
+                      <span>Rekening Sedekah</span>
+                      <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
+                      <b>{formatNumber(uangUntukSedekah)}</b>
+                    </li>
+                    <li>
+                      <span>Rekening Untuk Ema Iki</span>
+                      <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
+                      <b>{formatNumber(uangEmaIki)}</b>
+                    </li>
+                  </ol>
                 </li>
               )}
-              <li>
-                Catat Pemasukan Uang Investasi Sebesar{" "}
-                <b>{formatNumber(uangInvestasi)}</b>
-              </li>
-              <li>
-                Catat Pemasukan Uang Jajan Sebesar{" "}
-                <b>{formatNumber(uangJajan)}</b>
-              </li>
-              <li>
-                Catat Pemasukan Uang Hutang Sebesar{" "}
-                <b>{formatNumber(uangHutang)}</b>
-              </li>
-              <li>
-                Catat Pemasukan Uang Sedekah Sebesar{" "}
-                <b>{formatNumber(uangUntukSedekah)}</b>
-              </li>
-
-              {/* Total Uang Jajan */}
-              <li>
-                Total Uang Jajan di <b>SeaBank Adi Permadi</b> Harus Sebesar{" "}
-                <b>{formatNumber(raw(sisaUangJajan) + uangJajan)}</b>
-              </li>
 
               {/* Catat Komisi Bersih */}
               <li>
