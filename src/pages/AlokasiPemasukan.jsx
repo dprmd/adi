@@ -6,9 +6,8 @@ import WordInBracket from "../components/WordInBracket";
 // Harus Ada Total 100
 const metode = {
   kebutuhanPokok: 49,
-  investasi: 20,
-  keinginan: 10,
-  hutang: 20,
+  investasi: 30,
+  keinginan: 20,
   sedekah: 1,
 };
 
@@ -40,7 +39,6 @@ const AlokasiPemasukan = () => {
   const [uangPokok, setUangPokok] = useState(0);
   const [uangInvestasi, setUangInvestasi] = useState(0);
   const [uangJajan, setUangJajan] = useState(0);
-  const [uangHutangIbuEuis, setUangHutangIbuEuis] = useState(0);
 
   // Function
   const hitungSekarang = (e) => {
@@ -77,7 +75,6 @@ const AlokasiPemasukan = () => {
     setUangPokok(Math.round((metode.kebutuhanPokok / 100) * totalKomisiBersih));
     setUangInvestasi(Math.round((metode.investasi / 100) * totalKomisiBersih));
     setUangJajan(Math.round((metode.keinginan / 100) * totalKomisiBersih));
-    setUangHutangIbuEuis(Math.round((metode.hutang / 100) * totalKomisiBersih));
 
     // Render
     setSudahHitung(true);
@@ -268,12 +265,12 @@ const AlokasiPemasukan = () => {
                 </li>
               )}
 
-              {/* Transfer Uang Pokok + Investasi + Ema Iki + Sedekah + Hutang Ibu Euis*/}
+              {/* Transfer Uang Pokok + Investasi + Ema Iki + Sedekah */}
               <li>
                 {simpleMode ? "Transfer" : "Transfer Uang"}{" "}
                 {!simpleMode && (
                   <WordInBracket
-                    kalimat={`Pokok + Investasi + Ema Iki + Sedekah + Hutang Ibu Euis ${
+                    kalimat={`Pokok + Investasi + Ema Iki + Sedekah ${
                       raw(hutangUko) > 0 ? " + Hutang Uko" : ""
                     } ${kerja ? " + Gaji Perhari" : ""}`}
                   />
@@ -285,7 +282,6 @@ const AlokasiPemasukan = () => {
                       uangPokok +
                       uangInvestasi +
                       uangUntukSedekah +
-                      uangHutangIbuEuis +
                       (raw(hutangUko) > 0 ? raw(hutangUko) : 0) +
                       (kerja ? gajiPerHari : 0)
                   )}
@@ -320,10 +316,6 @@ const AlokasiPemasukan = () => {
                   <li>
                     Catat Pemasukan Uang Jajan Sebesar{" "}
                     <b>{formatNumber(uangJajan)}</b>
-                  </li>
-                  <li>
-                    Catat Pemasukan Uang Hutang Ibu Euis Sebesar{" "}
-                    <b>{formatNumber(uangHutangIbuEuis)}</b>
                   </li>
                   <li>
                     Catat Pemasukan Uang Sedekah Sebesar{" "}
@@ -379,11 +371,6 @@ const AlokasiPemasukan = () => {
                       <b>{formatNumber(uangJajan)}</b>
                     </li>
                     <li>
-                      <span>Rekening Hutang Ibu Euis</span>
-                      <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
-                      <b>{formatNumber(uangHutangIbuEuis)}</b>
-                    </li>
-                    <li>
                       <span>Rekening Sedekah</span>
                       <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
                       <b>{formatNumber(uangUntukSedekah)}</b>
@@ -424,9 +411,6 @@ const AlokasiPemasukan = () => {
               <ol className="list-inside px-2">
                 <li>
                   Pokok : <b>{metode.kebutuhanPokok}%</b>
-                </li>
-                <li>
-                  Hutang : <b>{metode.hutang}%</b>
                 </li>
                 <li>
                   Investasi : <b>{metode.investasi}%</b>
