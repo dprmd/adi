@@ -299,11 +299,13 @@ const AlokasiPemasukan = () => {
                     Catat Pemasukan Uang Pokok Sebesar{" "}
                     <b>{formatNumber(uangPokok)}</b>
                   </li>
-                  <li>
-                    Catat Pemasukan Uang Pokok
-                    <WordInBracket kalimat={"Gaji"} />
-                    Sebesar <b>{formatNumber(gajiPerHari)}</b>
-                  </li>
+                  {kerja && (
+                    <li>
+                      Catat Pemasukan Uang Pokok
+                      <WordInBracket kalimat={"Gaji"} />
+                      Sebesar <b>{formatNumber(gajiPerHari)}</b>
+                    </li>
+                  )}
                   {raw(hutangUko) > 0 && (
                     <li>
                       Catat Pemasukan Uang Pokok
@@ -346,14 +348,16 @@ const AlokasiPemasukan = () => {
                       <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
                       <b>{formatNumber(uangPokok)}</b>
                     </li>
-                    <li>
-                      <span>
-                        Rekening Pokok
-                        <WordInBracket kalimat={"Gaji"} />
-                      </span>
-                      <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
-                      <b>{formatNumber(gajiPerHari)}</b>
-                    </li>
+                    {kerja && (
+                      <li>
+                        <span>
+                          Rekening Pokok
+                          <WordInBracket kalimat={"Gaji"} />
+                        </span>
+                        <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
+                        <b>{formatNumber(gajiPerHari)}</b>
+                      </li>
+                    )}
                     {raw(hutangUko) > 0 && (
                       <li>
                         <span>
