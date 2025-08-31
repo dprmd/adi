@@ -7,10 +7,6 @@ import PerhitunganProfit from "./pages/PerhitunganProfit";
 import PerhitunganKomisiKotor from "./pages/PerhitunganKomisiKotor";
 import UbahInformasiProduk from "./pages/UbahInformasiProduk";
 
-const Root = () => {
-  return <Outlet></Outlet>;
-};
-
 const history = createBrowserHistory({
   window,
   basename: "/adi",
@@ -19,15 +15,14 @@ const history = createBrowserHistory({
 const router = createHashRouter([
   {
     path: "/",
-    Component: Root,
     children: [
       { index: true, Component: Home },
       { path: "PerhitunganProfit", Component: PerhitunganProfit },
       { path: "AlokasiPemasukan", Component: AlokasiPemasukan },
       {
         path: "PerhitunganKomisiKotor",
-        Component: PerhitunganKomisiKotor,
         children: [
+          { index: true, Component: PerhitunganKomisiKotor },
           { path: "UbahInformasiProduk", Component: UbahInformasiProduk },
         ],
       },

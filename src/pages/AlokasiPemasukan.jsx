@@ -72,9 +72,18 @@ const AlokasiPemasukan = () => {
     setKomisiBersih(totalKomisiBersih);
 
     // Pembagian Ke Rekening Yang Berbeda
-    setUangPokok(Math.round((metode.kebutuhanPokok / 100) * totalKomisiBersih));
-    setUangInvestasi(Math.round((metode.investasi / 100) * totalKomisiBersih));
-    setUangJajan(Math.round((metode.keinginan / 100) * totalKomisiBersih));
+    const pembagian = {
+      uangPokok: Math.round((metode.kebutuhanPokok / 100) * totalKomisiBersih),
+      uangInvestasi: Math.round((metode.investasi / 100) * totalKomisiBersih),
+      uangJajan: Math.round((metode.keinginan / 100) * totalKomisiBersih),
+    };
+    setUangPokok(pembagian.uangPokok);
+    setUangInvestasi(pembagian.uangInvestasi);
+
+    // Hitung Uang Yang Tersisa Setelah Di Bagikan
+    const totalPembagian =
+      pembagian.uangPokok + pembagian.uangInvestasi + pembagian.uangJajan;
+    setUangJajan(pembagian.uangJajan + (totalKomisiBersih - totalPembagian));
 
     // Render
     setSudahHitung(true);
