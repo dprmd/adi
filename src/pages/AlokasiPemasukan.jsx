@@ -29,7 +29,8 @@ const AlokasiPemasukan = () => {
   // Start
   const [totalPenghasilanShopee, setTotalPenghasilanShopee] = useState("");
   const [hutangUko, setHutangUko] = useState("0");
-  const [komisiKotor, setKomisiKotor] = useState("");
+  const [penghasilanHPP, setPenghasilanHPP] = useState("");
+  const [komisiKotor, setKomisiKotor] = useState(0);
   const [komisiBersih, setKomisiBersih] = useState(0);
 
   // Variables
@@ -44,10 +45,14 @@ const AlokasiPemasukan = () => {
   const hitungSekarang = (e) => {
     e.preventDefault();
 
+    // variable
+    const getKomisiKotor = raw(totalPenghasilanShopee) - raw(penghasilanHPP);
+    setKomisiKotor(getKomisiKotor);
+
     // Hitung Total Untuk Ade Siska
     const untukAdeSiska =
       raw(totalPenghasilanShopee) -
-      (patunganUntukEma.uko + raw(komisiKotor)) -
+      (patunganUntukEma.uko + getKomisiKotor) -
       raw(hutangUko);
     if (kerja) {
       setUangAdeSiska(untukAdeSiska - gajiPerHari);
@@ -60,7 +65,7 @@ const AlokasiPemasukan = () => {
     setUangEmaIki(uangUntukMaIki);
 
     // Hitung Sedekah
-    const sisaKomisiSemiBersih = raw(komisiKotor) - patunganUntukEma.adi;
+    const sisaKomisiSemiBersih = getKomisiKotor - patunganUntukEma.adi;
     const uangSedekah = Math.round(
       (metode.sedekah / 100) * sisaKomisiSemiBersih
     );
@@ -68,7 +73,7 @@ const AlokasiPemasukan = () => {
 
     // Total Komisi Bersih
     const totalKomisiBersih =
-      raw(komisiKotor) - (patunganUntukEma.adi + uangSedekah);
+      getKomisiKotor - (patunganUntukEma.adi + uangSedekah);
     setKomisiBersih(totalKomisiBersih);
 
     // Pembagian Ke Rekening Yang Berbeda
@@ -138,6 +143,7 @@ const AlokasiPemasukan = () => {
           </label>
           <input
             type="text"
+            id="totalPenghasilanShopee"
             value={totalPenghasilanShopee}
             required={true}
             onChange={(e) => {
@@ -148,18 +154,19 @@ const AlokasiPemasukan = () => {
           />
         </div>
 
-        {/* Input Komisi Kotor */}
+        {/* Input Penghasilan HPP */}
         <div className="input-components">
-          <label className="block" htmlFor="komisiKotor">
-            Masukan Komisi Kotor :
+          <label className="block" htmlFor="penghasilanHPP">
+            Masukan Penghasilan HPP :
           </label>
           <input
             type="text"
-            value={komisiKotor}
+            id="penghasilanHPP"
+            value={penghasilanHPP}
             required={true}
             onChange={(e) => {
               const number = validateNumber(e);
-              setKomisiKotor(formatNumber(number));
+              setPenghasilanHPP(formatNumber(number));
             }}
             placeholder="Isi di sini . . ."
           />
@@ -243,7 +250,7 @@ const AlokasiPemasukan = () => {
                   <span>(</span>
                   <span className="text-gray-400 text-sm inline-block mx-1">
                     {metode.sedekah}% x{" "}
-                    {formatNumber(raw(komisiKotor) - patunganUntukEma.adi)}
+                    {formatNumber(komisiKotor - patunganUntukEma.adi)}
                   </span>
                   <span>)</span>
                 </span>
