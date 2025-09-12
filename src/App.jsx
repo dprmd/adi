@@ -1,7 +1,6 @@
 import { createHashRouter, RouterProvider } from "react-router";
 import Home from "./pages/Home";
 import AlokasiPemasukan from "./pages/AlokasiPemasukan";
-import { Outlet } from "react-router";
 import { createBrowserHistory } from "history";
 import PerhitunganProfit from "./pages/PerhitunganProfit";
 import PerhitunganKomisiKotor from "./pages/PerhitunganKomisiKotor";
