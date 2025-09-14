@@ -311,13 +311,6 @@ const AlokasiPemasukan = () => {
                     Catat Pemasukan Uang Pokok Sebesar{" "}
                     <b>{formatNumber(uangPokok)}</b>
                   </li>
-                  {kerja && (
-                    <li>
-                      Catat Pemasukan Uang Pokok
-                      <WordInBracket kalimat={"Gaji"} />
-                      Sebesar <b>{formatNumber(gajiPerHari)}</b>
-                    </li>
-                  )}
                   {raw(hutangUko) > 0 && (
                     <li>
                       Catat Pemasukan Uang Pokok
@@ -330,13 +323,20 @@ const AlokasiPemasukan = () => {
                     <b>{formatNumber(uangInvestasi)}</b>
                   </li>
                   <li>
-                    Catat Pemasukan Uang Jajan Sebesar{" "}
-                    <b>{formatNumber(uangJajan)}</b>
-                  </li>
-                  <li>
                     Catat Pemasukan Uang Sedekah Sebesar{" "}
                     <b>{formatNumber(uangUntukSedekah)}</b>
                   </li>
+                  <li>
+                    Catat Pemasukan Uang Jajan Sebesar{" "}
+                    <b>{formatNumber(uangJajan)}</b>
+                  </li>
+                  {kerja && (
+                    <li>
+                      Catat Pemasukan Uang Pokok
+                      <WordInBracket kalimat={"Gaji"} />
+                      Sebesar <b>{formatNumber(gajiPerHari)}</b>
+                    </li>
+                  )}
                   <li>
                     Catat Pemasukan Uang Ema Iki Sebesar{" "}
                     <b>
@@ -356,16 +356,6 @@ const AlokasiPemasukan = () => {
                       <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
                       <b>{formatNumber(uangPokok)}</b>
                     </li>
-                    {kerja && (
-                      <li>
-                        <span>
-                          Rekening Pokok
-                          <WordInBracket kalimat={"Gaji"} />
-                        </span>
-                        <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
-                        <b>{formatNumber(gajiPerHari)}</b>
-                      </li>
-                    )}
                     {raw(hutangUko) > 0 && (
                       <li>
                         <span>
@@ -382,15 +372,25 @@ const AlokasiPemasukan = () => {
                       <b>{formatNumber(uangInvestasi)}</b>
                     </li>
                     <li>
-                      <span>Rekening Jajan</span>
-                      <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
-                      <b>{formatNumber(uangJajan)}</b>
-                    </li>
-                    <li>
                       <span>Rekening Sedekah</span>
                       <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
                       <b>{formatNumber(uangUntukSedekah)}</b>
                     </li>
+                    <li>
+                      <span>Rekening Jajan</span>
+                      <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
+                      <b>{formatNumber(uangJajan)}</b>
+                    </li>
+                    {kerja && (
+                      <li>
+                        <span>
+                          Rekening Pokok
+                          <WordInBracket kalimat={"Gaji"} />
+                        </span>
+                        <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
+                        <b>{formatNumber(gajiPerHari)}</b>
+                      </li>
+                    )}
                     <li>
                       <span>Rekening Untuk Ema Iki</span>
                       <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
