@@ -302,14 +302,16 @@ const AlokasiPemasukan = () => {
                 </b>
               </li>
 
+              {/* Transfer Uang Hutang */}
               {raw(hutangUko) > 0 && (
                 <li>
-                  {simpleMode ? "Transfer" : "Transfer Uang"} Ke{" "}
+                  <span>Transfer Uang Hutang Ke </span>
                   <b>SeaBank Haerudin</b> Sebesar{" "}
                   <b>{formatNumber(raw(hutangUko))}</b>
                 </li>
               )}
 
+              {/* Transfer Uang Ema IKI */}
               <li className="mb-6">
                 {simpleMode ? "Transfer" : "Transfer Uang"} Ke{" "}
                 <b>Dana Iki Maskiah</b> Sebesar{" "}
