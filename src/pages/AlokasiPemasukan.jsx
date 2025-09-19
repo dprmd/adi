@@ -281,124 +281,127 @@ const AlokasiPemasukan = () => {
                 </li>
               )}
 
-              {/* Transfer Uang Pokok + Investasi + Ema Iki + Sedekah */}
+              {/* Transfer Uang Pokok + Investasi + Sedekah */}
               <li>
                 {simpleMode ? "Transfer" : "Transfer Uang"}{" "}
                 {!simpleMode && (
                   <WordInBracket
-                    kalimat={`Pokok + Investasi + Ema Iki + Sedekah ${
-                      raw(hutangUko) > 0 ? " + Hutang Uko" : ""
-                    } ${kerja ? " + Gaji Perhari" : ""}`}
+                    kalimat={`Pokok + Investasi + Sedekah  ${
+                      kerja ? " + Gaji Perhari" : ""
+                    }`}
                   />
                 )}{" "}
                 Ke <b>SeaBank Haerudin</b> Sebesar{" "}
                 <b>
                   {formatNumber(
-                    uangEmaIki +
-                      uangPokok +
+                    uangPokok +
                       uangInvestasi +
                       uangUntukSedekah +
-                      (raw(hutangUko) > 0 ? raw(hutangUko) : 0) +
                       (kerja ? gajiPerHari : 0)
                   )}
                 </b>
               </li>
 
-              {/* Catat Pemasukan Ke Pokok */}
-              {!simpleMode && (
-                <>
-                  <li>
-                    Catat Pemasukan Uang Pokok Sebesar{" "}
-                    <b>{formatNumber(uangPokok)}</b>
-                  </li>
-                  {raw(hutangUko) > 0 && (
-                    <li>
-                      Catat Pemasukan Uang Pokok
-                      <WordInBracket kalimat={"Hutang Uko"} />
-                      Sebesar <b>{formatNumber(raw(hutangUko))}</b>
-                    </li>
-                  )}
-                  <li>
-                    Catat Pemasukan Uang Investasi Sebesar{" "}
-                    <b>{formatNumber(uangInvestasi)}</b>
-                  </li>
-                  <li>
-                    Catat Pemasukan Uang Sedekah Sebesar{" "}
-                    <b>{formatNumber(uangUntukSedekah)}</b>
-                  </li>
-                  <li>
-                    Catat Pemasukan Uang Jajan Sebesar{" "}
-                    <b>{formatNumber(uangJajan)}</b>
-                  </li>
-                  {kerja && (
-                    <li>
-                      Catat Pemasukan Uang Pokok
-                      <WordInBracket kalimat={"Gaji"} />
-                      Sebesar <b>{formatNumber(gajiPerHari)}</b>
-                    </li>
-                  )}
-                  <li>
-                    Catat Pemasukan Uang Ema Iki Sebesar{" "}
-                    <b>
-                      {formatNumber(
-                        patunganUntukEma.uko + patunganUntukEma.adi
-                      )}
-                    </b>
-                  </li>
-                </>
-              )}
-              {simpleMode && (
+              {raw(hutangUko) > 0 && (
                 <li>
-                  Catat Ke Aplikasi Keuangan :
-                  <ol className="simplemodetransfer list-inside">
+                  {simpleMode ? "Transfer" : "Transfer Uang"} Ke{" "}
+                  <b>SeaBank Haerudin</b> Sebesar{" "}
+                  <b>{formatNumber(raw(hutangUko))}</b>
+                </li>
+              )}
+
+              <li className="mb-6">
+                {simpleMode ? "Transfer" : "Transfer Uang"} Ke{" "}
+                <b>Dana Iki Maskiah</b> Sebesar{" "}
+                <b>
+                  {formatNumber(patunganUntukEma.adi + patunganUntukEma.uko)}
+                </b>
+              </li>
+
+              {/* Catat Pemasukan Ke Pokok */}
+              <div className="mb-6">
+                {!simpleMode && (
+                  <>
                     <li>
-                      <span>Rekening Pokok</span>{" "}
-                      <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
+                      Catat Pemasukan Uang Pokok Sebesar{" "}
                       <b>{formatNumber(uangPokok)}</b>
                     </li>
                     {raw(hutangUko) > 0 && (
                       <li>
-                        <span>
-                          Rekening Pokok
-                          <WordInBracket kalimat={"Hutang Uko"} />
-                        </span>
-                        <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
-                        <b>{formatNumber(raw(hutangUko))}</b>
+                        Catat Pemasukan Uang Pokok
+                        <WordInBracket kalimat={"Hutang Uko"} />
+                        Sebesar <b>{formatNumber(raw(hutangUko))}</b>
                       </li>
                     )}
                     <li>
-                      <span>Rekening Investasi</span>
-                      <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
+                      Catat Pemasukan Uang Investasi Sebesar{" "}
                       <b>{formatNumber(uangInvestasi)}</b>
                     </li>
                     <li>
-                      <span>Rekening Sedekah</span>
-                      <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
+                      Catat Pemasukan Uang Sedekah Sebesar{" "}
                       <b>{formatNumber(uangUntukSedekah)}</b>
                     </li>
                     <li>
-                      <span>Rekening Jajan</span>
-                      <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
+                      Catat Pemasukan Uang Jajan Sebesar{" "}
                       <b>{formatNumber(uangJajan)}</b>
                     </li>
                     {kerja && (
                       <li>
-                        <span>
-                          Rekening Pokok
-                          <WordInBracket kalimat={"Gaji"} />
-                        </span>
-                        <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
-                        <b>{formatNumber(gajiPerHari)}</b>
+                        Catat Pemasukan Uang Pokok
+                        <WordInBracket kalimat={"Gaji"} />
+                        Sebesar <b>{formatNumber(gajiPerHari)}</b>
                       </li>
                     )}
-                    <li>
-                      <span>Rekening Untuk Ema Iki</span>
-                      <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
-                      <b>{formatNumber(uangEmaIki)}</b>
-                    </li>
-                  </ol>
-                </li>
-              )}
+                  </>
+                )}
+                {simpleMode && (
+                  <li>
+                    Catat Ke Aplikasi Keuangan :
+                    <ol className="simplemodetransfer list-inside">
+                      <li>
+                        <span>Rekening Pokok</span>{" "}
+                        <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
+                        <b>{formatNumber(uangPokok)}</b>
+                      </li>
+                      {raw(hutangUko) > 0 && (
+                        <li>
+                          <span>
+                            Rekening Pokok
+                            <WordInBracket kalimat={"Hutang Uko"} />
+                          </span>
+                          <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
+                          <b>{formatNumber(raw(hutangUko))}</b>
+                        </li>
+                      )}
+                      <li>
+                        <span>Rekening Investasi</span>
+                        <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
+                        <b>{formatNumber(uangInvestasi)}</b>
+                      </li>
+                      <li>
+                        <span>Rekening Sedekah</span>
+                        <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
+                        <b>{formatNumber(uangUntukSedekah)}</b>
+                      </li>
+                      <li>
+                        <span>Rekening Jajan</span>
+                        <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
+                        <b>{formatNumber(uangJajan)}</b>
+                      </li>
+                      {kerja && (
+                        <li>
+                          <span>
+                            Rekening Pokok
+                            <WordInBracket kalimat={"Gaji"} />
+                          </span>
+                          <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
+                          <b>{formatNumber(gajiPerHari)}</b>
+                        </li>
+                      )}
+                    </ol>
+                  </li>
+                )}
+              </div>
 
               {/* Catat Komisi Bersih */}
               <li>
