@@ -19,12 +19,21 @@ const patunganUntukEma = {
 
 const gajiPerHari = 50000;
 
+// Additional function
+const today = new Date();
+const day = today.getDay();
+
 const AlokasiPemasukan = () => {
   // State
   const navigate = useNavigate();
   const [sudahHitung, setSudahHitung] = useState(false);
   const [kerja, setKerja] = useState(true);
   const [simpleMode, setSimpleMode] = useState(true);
+
+  // Hari Minggu Tidak Kerja
+  if (day === 0) {
+    setKerja(false);
+  }
 
   // Start
   const [totalPenghasilanShopee, setTotalPenghasilanShopee] = useState("");
@@ -267,17 +276,27 @@ const AlokasiPemasukan = () => {
             <b className="text-lg">Yang Dilakukan Selanjutnya</b>
             <ol className="list-decimal ml-6">
               {/* Transfer Ke Ade Siska */}
-              {simpleMode ? (
-                // Simple Mode
+              <li>
+                {simpleMode ? (
+                  // Simple Mode
+                  <div>
+                    Transfer Ke <b>SeaBank Ade Siska</b> Sebesar{" "}
+                    <b>{formatNumber(uangAdeSiska)}</b>
+                  </div>
+                ) : (
+                  // Ribet Mode
+                  <div>
+                    Transfer Uang Ke <b>SeaBank Ade Siska</b> Sebesar{" "}
+                    <b>{formatNumber(uangAdeSiska)}</b>
+                  </div>
+                )}
+              </li>
+
+              {/* Transfer Uang Hutang HP */}
+              {day === 6 && (
                 <li>
                   Transfer Ke <b>SeaBank Ade Siska</b> Sebesar{" "}
-                  <b>{formatNumber(uangAdeSiska)}</b>
-                </li>
-              ) : (
-                // Ribet Mode
-                <li>
-                  Transfer Uang Ke <b>SeaBank Ade Siska</b> Sebesar{" "}
-                  <b>{formatNumber(uangAdeSiska)}</b>
+                  <b>{formatNumber(100000)}</b> Untuk Membayar Hutang HP
                 </li>
               )}
 
