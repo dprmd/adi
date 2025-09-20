@@ -22,18 +22,24 @@ const gajiPerHari = 50000;
 // Additional function
 const today = new Date();
 const day = today.getDay();
+const dayName = [
+  "Minggu",
+  "Senin",
+  "Selasa",
+  "Rabu",
+  "Kamis",
+  "Jum'at",
+  "Sabtu",
+];
 
 const AlokasiPemasukan = () => {
   // State
   const navigate = useNavigate();
   const [sudahHitung, setSudahHitung] = useState(false);
-  const [kerja, setKerja] = useState(true);
+  const [kerja, setKerja] = useState(day === 0 ? false : true);
   const [simpleMode, setSimpleMode] = useState(true);
 
   // Hari Minggu Tidak Kerja
-  if (day === 0) {
-    setKerja(false);
-  }
 
   // Start
   const [totalPenghasilanShopee, setTotalPenghasilanShopee] = useState("");
@@ -111,6 +117,10 @@ const AlokasiPemasukan = () => {
         onSubmit={hitungSekarang}
       >
         {/* Tombol On Off Kerja */}
+        <div className="flex items-center justify-between input-components">
+          <span>Hari : {dayName[day]}</span>
+        </div>
+
         <div className="flex items-center justify-between input-components">
           <span>Kerja Hari Ini</span>
           <button
@@ -280,8 +290,13 @@ const AlokasiPemasukan = () => {
                 {simpleMode ? (
                   // Simple Mode
                   <div>
-                    Transfer Ke <b>SeaBank Ade Siska</b> Sebesar{" "}
-                    <b>{formatNumber(uangAdeSiska)}</b>
+                    Transfer Ke <b>SeaBank Ade Siska</b>{" "}
+                    {day === 0 && <span>Ditambah Hutang HP</span>} Sebesar{" "}
+                    <b>
+                      {day === 0
+                        ? formatNumber(uangAdeSiska + 100000)
+                        : formatNumber(uangAdeSiska)}
+                    </b>
                   </div>
                 ) : (
                   // Ribet Mode
@@ -291,14 +306,6 @@ const AlokasiPemasukan = () => {
                   </div>
                 )}
               </li>
-
-              {/* Transfer Uang Hutang HP */}
-              {day === 6 && (
-                <li>
-                  Transfer Ke <b>SeaBank Ade Siska</b> Sebesar{" "}
-                  <b>{formatNumber(100000)}</b> Untuk Membayar Hutang HP
-                </li>
-              )}
 
               {/* Transfer Uang Pokok + Investasi + Sedekah */}
               <li>
@@ -428,6 +435,11 @@ const AlokasiPemasukan = () => {
               <li>
                 Catat Komisi Bersih Ke <b>Excel</b> Sebesar{" "}
                 <b>{formatNumber(komisiBersih)}</b>
+              </li>
+
+              {/* Catat Hutang HP */}
+              <li>
+                Catat Hutang HP Dibayar Sebesar <b>{formatNumber(100000)}</b>
               </li>
             </ol>
           </div>
