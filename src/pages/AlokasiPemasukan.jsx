@@ -438,9 +438,11 @@ const AlokasiPemasukan = () => {
               </li>
 
               {/* Catat Hutang HP */}
-              <li>
-                Catat Hutang HP Dibayar Sebesar <b>{formatNumber(100000)}</b>
-              </li>
+              {day === 0 && (
+                <li>
+                  Catat Hutang HP Dibayar Sebesar <b>{formatNumber(100000)}</b>
+                </li>
+              )}
             </ol>
           </div>
           <div>
