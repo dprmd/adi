@@ -5,9 +5,9 @@ import WordInBracket from "../components/WordInBracket";
 
 // Harus Ada Total 100
 const metode = {
-  kebutuhanPokok: 49,
+  danaDarurat: 49,
   investasi: 30,
-  keinginan: 20,
+  konsumsi: 20,
   sedekah: 1,
 };
 
@@ -52,9 +52,9 @@ const AlokasiPemasukan = () => {
   const [uangAdeSiska, setUangAdeSiska] = useState(0);
   const [uangEmaIki, setUangEmaIki] = useState(0);
   const [uangUntukSedekah, setUangUntukSedekah] = useState(0);
-  const [uangPokok, setUangPokok] = useState(0);
+  const [uangDanaDarurat, setUangDanaDarurat] = useState(0);
   const [uangInvestasi, setUangInvestasi] = useState(0);
-  const [uangJajan, setUangJajan] = useState(0);
+  const [uangKonsumsi, setUangKonsumsi] = useState(0);
 
   // Function
   const hitungSekarang = (e) => {
@@ -93,17 +93,23 @@ const AlokasiPemasukan = () => {
 
     // Pembagian Ke Rekening Yang Berbeda
     const pembagian = {
-      uangPokok: Math.round((metode.kebutuhanPokok / 100) * totalKomisiBersih),
+      uangDanaDarurat: Math.round(
+        (metode.danaDarurat / 100) * totalKomisiBersih
+      ),
       uangInvestasi: Math.round((metode.investasi / 100) * totalKomisiBersih),
-      uangJajan: Math.round((metode.keinginan / 100) * totalKomisiBersih),
+      uangKonsumsi: Math.round((metode.konsumsi / 100) * totalKomisiBersih),
     };
-    setUangPokok(pembagian.uangPokok);
+    setUangDanaDarurat(pembagian.uangDanaDarurat);
     setUangInvestasi(pembagian.uangInvestasi);
 
     // Hitung Uang Yang Tersisa Setelah Di Bagikan
     const totalPembagian =
-      pembagian.uangPokok + pembagian.uangInvestasi + pembagian.uangJajan;
-    setUangJajan(pembagian.uangJajan + (totalKomisiBersih - totalPembagian));
+      pembagian.uangDanaDarurat +
+      pembagian.uangInvestasi +
+      pembagian.uangKonsumsi;
+    setUangKonsumsi(
+      pembagian.uangKonsumsi + (totalKomisiBersih - totalPembagian)
+    );
 
     // Render
     setSudahHitung(true);
@@ -307,20 +313,20 @@ const AlokasiPemasukan = () => {
                 )}
               </li>
 
-              {/* Transfer Uang Pokok + Investasi + Sedekah */}
+              {/* Transfer Uang Dana Darurat + Investasi + Sedekah */}
               <li>
                 {simpleMode ? "Transfer" : "Transfer Uang"}{" "}
                 {!simpleMode && (
                   <WordInBracket
-                    kalimat={`Pokok + Investasi + Sedekah  ${
+                    kalimat={`Dana Darurat + Investasi + Sedekah  ${
                       kerja ? " + Gaji Perhari" : ""
                     }`}
                   />
                 )}{" "}
-                Ke <b>SeaBank Haerudin</b> Sebesar{" "}
+                Ke <b>SeaBank Adi Permadi</b> Sebesar{" "}
                 <b>
                   {formatNumber(
-                    uangPokok +
+                    uangDanaDarurat +
                       uangInvestasi +
                       uangUntukSedekah +
                       (kerja ? gajiPerHari : 0)
@@ -332,7 +338,7 @@ const AlokasiPemasukan = () => {
               {raw(hutangUko) > 0 && (
                 <li>
                   <span>Transfer Uang Hutang Ke </span>
-                  <b>SeaBank Haerudin</b> Sebesar{" "}
+                  <b>SeaBank Adi Permadi</b> Sebesar{" "}
                   <b>{formatNumber(raw(hutangUko))}</b>
                 </li>
               )}
@@ -346,17 +352,17 @@ const AlokasiPemasukan = () => {
                 </b>
               </li>
 
-              {/* Catat Pemasukan Ke Pokok */}
+              {/* Catat Pemasukan Ke Dana Darurat */}
               <div className="mb-6">
                 {!simpleMode && (
                   <>
                     <li>
-                      Catat Pemasukan Uang Pokok Sebesar{" "}
-                      <b>{formatNumber(uangPokok)}</b>
+                      Catat Pemasukan Uang Dana Darurat Sebesar{" "}
+                      <b>{formatNumber(uangDanaDarurat)}</b>
                     </li>
                     {raw(hutangUko) > 0 && (
                       <li>
-                        Catat Pemasukan Uang Pokok
+                        Catat Pemasukan Uang Dana Darurat
                         <WordInBracket kalimat={"Hutang Uko"} />
                         Sebesar <b>{formatNumber(raw(hutangUko))}</b>
                       </li>
@@ -370,12 +376,12 @@ const AlokasiPemasukan = () => {
                       <b>{formatNumber(uangUntukSedekah)}</b>
                     </li>
                     <li>
-                      Catat Pemasukan Uang Jajan Sebesar{" "}
-                      <b>{formatNumber(uangJajan)}</b>
+                      Catat Pemasukan Uang Konsumsi Sebesar{" "}
+                      <b>{formatNumber(uangKonsumsi)}</b>
                     </li>
                     {kerja && (
                       <li>
-                        Catat Pemasukan Uang Pokok
+                        Catat Pemasukan Uang Dana Darurat
                         <WordInBracket kalimat={"Gaji"} />
                         Sebesar <b>{formatNumber(gajiPerHari)}</b>
                       </li>
@@ -387,14 +393,14 @@ const AlokasiPemasukan = () => {
                     Catat Ke Aplikasi Keuangan :
                     <ol className="simplemodetransfer list-inside">
                       <li>
-                        <span>Rekening Pokok</span>{" "}
+                        <span>Rekening Dana Darurat</span>{" "}
                         <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
-                        <b>{formatNumber(uangPokok)}</b>
+                        <b>{formatNumber(uangDanaDarurat)}</b>
                       </li>
                       {raw(hutangUko) > 0 && (
                         <li>
                           <span>
-                            Rekening Pokok
+                            Rekening Dana Darurat
                             <WordInBracket kalimat={"Hutang Uko"} />
                           </span>
                           <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
@@ -412,14 +418,14 @@ const AlokasiPemasukan = () => {
                         <b>{formatNumber(uangUntukSedekah)}</b>
                       </li>
                       <li>
-                        <span>Rekening Jajan</span>
+                        <span>Rekening Konsumsi</span>
                         <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
-                        <b>{formatNumber(uangJajan)}</b>
+                        <b>{formatNumber(uangKonsumsi)}</b>
                       </li>
                       {kerja && (
                         <li>
                           <span>
-                            Rekening Pokok
+                            Rekening Dana Darurat
                             <WordInBracket kalimat={"Gaji"} />
                           </span>
                           <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
@@ -464,13 +470,13 @@ const AlokasiPemasukan = () => {
               <span>Metode Pembagian</span>
               <ol className="list-inside px-2">
                 <li>
-                  Pokok : <b>{metode.kebutuhanPokok}%</b>
+                  Dana Darurat : <b>{metode.danaDarurat}%</b>
                 </li>
                 <li>
                   Investasi : <b>{metode.investasi}%</b>
                 </li>
                 <li>
-                  Jajan : <b>{metode.keinginan}%</b>
+                  Konsumsi : <b>{metode.konsumsi}%</b>
                 </li>
                 <li>
                   Sedekah : <b>{metode.sedekah}%</b>
