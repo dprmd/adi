@@ -101,8 +101,9 @@ const AlokasiPemasukan = () => {
     const totalPembagian =
       pembagian.uangDanaDarurat +
       pembagian.uangInvestasi
+    const sisaPembagian = totalKomisiBersih - totalPembagian
 
-    setUangDanaDarurat(pembagian.uangDanaDarurat + (totalKomisiBersih - totalPembagian));
+    setUangDanaDarurat(pembagian.uangDanaDarurat + sisaPembagian);
     setUangInvestasi(pembagian.uangInvestasi);
 
     // Render
