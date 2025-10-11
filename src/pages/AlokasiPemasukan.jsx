@@ -5,9 +5,8 @@ import WordInBracket from "../components/WordInBracket";
 
 // Harus Ada Total 100
 const metode = {
-  danaDarurat: 49,
+  danaDarurat: 60,
   investasi: 30,
-  konsumsi: 20,
   sedekah: 1,
 };
 
@@ -54,7 +53,6 @@ const AlokasiPemasukan = () => {
   const [uangUntukSedekah, setUangUntukSedekah] = useState(0);
   const [uangDanaDarurat, setUangDanaDarurat] = useState(0);
   const [uangInvestasi, setUangInvestasi] = useState(0);
-  const [uangKonsumsi, setUangKonsumsi] = useState(0);
 
   // Function
   const hitungSekarang = (e) => {
@@ -97,19 +95,15 @@ const AlokasiPemasukan = () => {
         (metode.danaDarurat / 100) * totalKomisiBersih
       ),
       uangInvestasi: Math.round((metode.investasi / 100) * totalKomisiBersih),
-      uangKonsumsi: Math.round((metode.konsumsi / 100) * totalKomisiBersih),
     };
-    setUangDanaDarurat(pembagian.uangDanaDarurat);
-    setUangInvestasi(pembagian.uangInvestasi);
 
-    // Hitung Uang Yang Tersisa Setelah Di Bagikan
+    // Hitung uang sisa pembagian
     const totalPembagian =
       pembagian.uangDanaDarurat +
-      pembagian.uangInvestasi +
-      pembagian.uangKonsumsi;
-    setUangKonsumsi(
-      pembagian.uangKonsumsi + (totalKomisiBersih - totalPembagian)
-    );
+      pembagian.uangInvestasi
+
+    setUangDanaDarurat(pembagian.uangDanaDarurat + totalPembagian);
+    setUangInvestasi(pembagian.uangInvestasi);
 
     // Render
     setSudahHitung(true);
@@ -375,10 +369,6 @@ const AlokasiPemasukan = () => {
                       Catat Pemasukan Uang Sedekah Sebesar{" "}
                       <b>{formatNumber(uangUntukSedekah)}</b>
                     </li>
-                    <li>
-                      Catat Pemasukan Uang Konsumsi Sebesar{" "}
-                      <b>{formatNumber(uangKonsumsi)}</b>
-                    </li>
                     {kerja && (
                       <li>
                         Catat Pemasukan Uang Dana Darurat
@@ -416,11 +406,6 @@ const AlokasiPemasukan = () => {
                         <span>Rekening Sedekah</span>
                         <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
                         <b>{formatNumber(uangUntukSedekah)}</b>
-                      </li>
-                      <li>
-                        <span>Rekening Konsumsi</span>
-                        <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
-                        <b>{formatNumber(uangKonsumsi)}</b>
                       </li>
                       {kerja && (
                         <li>
@@ -474,9 +459,6 @@ const AlokasiPemasukan = () => {
                 </li>
                 <li>
                   Investasi : <b>{metode.investasi}%</b>
-                </li>
-                <li>
-                  Konsumsi : <b>{metode.konsumsi}%</b>
                 </li>
                 <li>
                   Sedekah : <b>{metode.sedekah}%</b>
