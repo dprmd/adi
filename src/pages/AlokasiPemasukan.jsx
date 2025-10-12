@@ -292,11 +292,8 @@ const AlokasiPemasukan = () => {
                   // Simple Mode
                   <div>
                     Transfer Ke <b>SeaBank Ade Siska</b>{" "}
-                    {day === 0 && <span>Ditambah Hutang HP</span>} Sebesar{" "}
                     <b>
-                      {day === 0
-                        ? formatNumber(uangAdeSiska + 100000)
-                        : formatNumber(uangAdeSiska)}
+                        {formatNumber(uangAdeSiska)}
                     </b>
                   </div>
                 ) : (
@@ -428,13 +425,6 @@ const AlokasiPemasukan = () => {
                 Catat Komisi Bersih Ke <b>Excel</b> Sebesar{" "}
                 <b>{formatNumber(komisiBersih)}</b>
               </li>
-
-              {/* Catat Hutang HP */}
-              {day === 0 && (
-                <li>
-                  Catat Hutang HP Dibayar Sebesar <b>{formatNumber(100000)}</b>
-                </li>
-              )}
             </ol>
           </div>
           <div>
