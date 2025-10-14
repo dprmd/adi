@@ -5,8 +5,9 @@ import WordInBracket from "../components/WordInBracket";
 
 // Harus Ada Total 100
 const metode = {
-  danaDarurat: 60,
-  investasi: 30,
+  capital: 40,
+  danaDarurat: 30,
+  investasi: 29,
   sedekah: 1,
 };
 
@@ -50,9 +51,10 @@ const AlokasiPemasukan = () => {
   // Variables
   const [uangAdeSiska, setUangAdeSiska] = useState(0);
   const [uangEmaIki, setUangEmaIki] = useState(0);
-  const [uangUntukSedekah, setUangUntukSedekah] = useState(0);
+  const [uangCapital, setUangCapital] = useState(0);
   const [uangDanaDarurat, setUangDanaDarurat] = useState(0);
   const [uangInvestasi, setUangInvestasi] = useState(0);
+  const [uangUntukSedekah, setUangUntukSedekah] = useState(0);
 
   // Function
   const hitungSekarang = (e) => {
@@ -91,6 +93,7 @@ const AlokasiPemasukan = () => {
 
     // Pembagian Ke Rekening Yang Berbeda
     const pembagian = {
+      uangCapital: Math.round(metode.capital / 100) * totalKomisiBersih,
       uangDanaDarurat: Math.round(
         (metode.danaDarurat / 100) * totalKomisiBersih
       ),
@@ -99,11 +102,13 @@ const AlokasiPemasukan = () => {
 
     // Hitung uang sisa pembagian
     const totalPembagian =
+      pembagian.uangCapital +
       pembagian.uangDanaDarurat +
-      pembagian.uangInvestasi
-    const sisaPembagian = totalKomisiBersih - totalPembagian
+      pembagian.uangInvestasi;
+    const sisaPembagian = totalKomisiBersih - totalPembagian;
 
-    setUangDanaDarurat(pembagian.uangDanaDarurat + sisaPembagian);
+    setUangCapital(pembagian.uangCapital + sisaPembagian);
+    setUangDanaDarurat(pembagian.uangDanaDarurat);
     setUangInvestasi(pembagian.uangInvestasi);
 
     // Render
@@ -292,9 +297,7 @@ const AlokasiPemasukan = () => {
                   // Simple Mode
                   <div>
                     Transfer Ke <b>SeaBank Ade Siska</b>{" "}
-                    <b>
-                        {formatNumber(uangAdeSiska)}
-                    </b>
+                    <b>{formatNumber(uangAdeSiska)}</b>
                   </div>
                 ) : (
                   // Ribet Mode
@@ -310,7 +313,7 @@ const AlokasiPemasukan = () => {
                 {simpleMode ? "Transfer" : "Transfer Uang"}{" "}
                 {!simpleMode && (
                   <WordInBracket
-                    kalimat={`Dana Darurat + Investasi + Sedekah  ${
+                    kalimat={`Capital + Dana Darurat + Investasi + Sedekah  ${
                       kerja ? " + Gaji Perhari" : ""
                     }`}
                   />
@@ -318,7 +321,8 @@ const AlokasiPemasukan = () => {
                 Ke <b>SeaBank Adi Permadi</b> Sebesar{" "}
                 <b>
                   {formatNumber(
-                    uangDanaDarurat +
+                    uangCapital +
+                      uangDanaDarurat +
                       uangInvestasi +
                       uangUntukSedekah +
                       (kerja ? gajiPerHari : 0)
@@ -348,6 +352,10 @@ const AlokasiPemasukan = () => {
               <div className="mb-6">
                 {!simpleMode && (
                   <>
+                    <li>
+                      Catat Pemasukan Uang Capital Sebesar{" "}
+                      <b>{formatNumber(uangCapital)}</b>
+                    </li>
                     <li>
                       Catat Pemasukan Uang Dana Darurat Sebesar{" "}
                       <b>{formatNumber(uangDanaDarurat)}</b>
@@ -380,6 +388,11 @@ const AlokasiPemasukan = () => {
                   <li>
                     Catat Ke Aplikasi Keuangan :
                     <ol className="simplemodetransfer list-inside">
+                      <li>
+                        <span>Rekening Capital</span>{" "}
+                        <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
+                        <b>{formatNumber(uangCapital)}</b>
+                      </li>
                       <li>
                         <span>Rekening Dana Darurat</span>{" "}
                         <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
