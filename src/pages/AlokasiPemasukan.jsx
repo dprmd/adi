@@ -377,7 +377,7 @@ const AlokasiPemasukan = () => {
                     </li>
                     {kerja && (
                       <li>
-                        Catat Pemasukan Uang Dana Darurat
+                        Catat Pemasukan Uang Capital
                         <WordInBracket kalimat={"Gaji"} />
                         Sebesar <b>{formatNumber(gajiPerHari)}</b>
                       </li>
@@ -421,7 +421,7 @@ const AlokasiPemasukan = () => {
                       {kerja && (
                         <li>
                           <span>
-                            Rekening Dana Darurat
+                            Rekening Capital
                             <WordInBracket kalimat={"Gaji"} />
                           </span>
                           <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
