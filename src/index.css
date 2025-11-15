@@ -9,7 +9,7 @@
 }
 
 .input-components input {
-  @apply px-2 py-1 border rounded-md border-gray-500 outline-none;
+  @apply px-2 py-1 border rounded-md border-gray-500 outline-none max-w-full;
 }
 
 .input-components label {
