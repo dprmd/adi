@@ -458,6 +458,9 @@ const AlokasiPemasukan = () => {
               </span>
               <span>Metode Pembagian</span>
               <ol className="list-inside px-2">
+              <li>
+                Capital : <b>{metode.capital}%</b>
+              </li>
                 <li>
                   Dana Darurat : <b>{metode.danaDarurat}%</b>
                 </li>
