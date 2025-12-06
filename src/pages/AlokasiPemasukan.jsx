@@ -17,7 +17,8 @@ const patunganUntukEma = {
   adi: 32000,
 };
 
-const gajiPerHari = 50000;
+const gajiPerHariFull = 50000;
+const gajiPerHariHalf = 25000;
 
 // Additional function
 const today = new Date();
@@ -37,6 +38,8 @@ const AlokasiPemasukan = () => {
   const navigate = useNavigate();
   const [sudahHitung, setSudahHitung] = useState(false);
   const [kerja, setKerja] = useState(day === 0 ? false : true);
+  const [waktuKerja, setWaktuKerja] = useState("Satu Hari Full");
+  const [gajiHarian, setGajiHarian] = useState(0);
   const [simpleMode, setSimpleMode] = useState(true);
 
   // Hari Minggu Tidak Kerja
@@ -60,6 +63,17 @@ const AlokasiPemasukan = () => {
   const hitungSekarang = (e) => {
     e.preventDefault();
 
+    // hitung gaji harian
+    if (kerja) {
+      if (waktuKerja === "Satu Hari Full") {
+        setGajiHarian(gajiPerHariFull);
+      } else {
+        setGajiHarian(gajiPerHariHalf);
+      }
+    } else {
+      setGajiHarian(0);
+    }
+
     // variable
     const getKomisiKotor = raw(totalPenghasilanShopee) - raw(penghasilanHPP);
     setKomisiKotor(getKomisiKotor);
@@ -70,7 +84,7 @@ const AlokasiPemasukan = () => {
       (patunganUntukEma.uko + getKomisiKotor) -
       raw(hutangUko);
     if (kerja) {
-      setUangAdeSiska(untukAdeSiska - gajiPerHari);
+      setUangAdeSiska(untukAdeSiska - gajiHarian);
     } else {
       setUangAdeSiska(untukAdeSiska);
     }
@@ -142,6 +156,19 @@ const AlokasiPemasukan = () => {
             <span className="inline-block w-[25px] h-[25px] bg-black rounded-full"></span>
           </button>
         </div>
+
+        {kerja && (
+          <div className="flex items-center justify-between input-components">
+            <span>Berapa Lama Kerja :</span>
+            <select
+              value={waktuKerja}
+              onChange={(e) => setWaktuKerja(e.target.value)}
+            >
+              <option value="Satu Hari Full">Satu Hari Full</option>
+              <option value="Setengah Hari">Setengah Hari</option>
+            </select>
+          </div>
+        )}
 
         {/* Tombol On Off Mode Simple */}
         <div className="flex items-center justify-between input-components">
@@ -246,13 +273,21 @@ const AlokasiPemasukan = () => {
               <b>{formatNumber(totalPenghasilanShopee)}</b>
             </p>
             <p>
+              Total Penghasilan HPP : <b>{formatNumber(penghasilanHPP)}</b>
+            </p>
+            <p>
               Komisi Kotor : <b>{formatNumber(komisiKotor)}</b>
+              {!simpleMode && (
+                <WordInBracket
+                  kalimat={`Total Penghasilan Dari Shopee - Total Penghasilan HPP`}
+                />
+              )}
             </p>
             <p>
               Setor Untuk Ade Siska : <b>{formatNumber(uangAdeSiska)}</b>
               {!simpleMode && (
                 <WordInBracket
-                  kalimat={`Total Penghasilan - Komisi Kotor - Patungan Ema
+                  kalimat={`Total Penghasilan HPP - Patungan Ema Uko
                     ${kerja ? "- Gaji Per Hari" : ""}
                     ${raw(hutangUko) > 0 ? " - Hutang Uko" : ""}`}
                 />
@@ -283,6 +318,13 @@ const AlokasiPemasukan = () => {
             </p>
             <p>
               Komisi Bersih : <b>{formatNumber(komisiBersih)}</b>
+              {!simpleMode && (
+                <WordInBracket
+                  kalimat={
+                    "Komisi Kotor - Patungan Ema Adi - Uang Untuk Sedekah"
+                  }
+                />
+              )}
             </p>
           </div>
 
@@ -308,12 +350,12 @@ const AlokasiPemasukan = () => {
                 )}
               </li>
 
-              {/* Transfer Uang Dana Darurat + Investasi + Sedekah */}
+              {/* Transfer Uang Capital + Dana Darurat + Investasi + Sedekah + Ema Iki*/}
               <li>
                 {simpleMode ? "Transfer" : "Transfer Uang"}{" "}
                 {!simpleMode && (
                   <WordInBracket
-                    kalimat={`Capital + Dana Darurat + Investasi + Sedekah  ${
+                    kalimat={`Capital + Dana Darurat + Investasi + Sedekah + Uang Ema Iki ${
                       kerja ? " + Gaji Perhari" : ""
                     }`}
                   />
@@ -325,7 +367,9 @@ const AlokasiPemasukan = () => {
                       uangDanaDarurat +
                       uangInvestasi +
                       uangUntukSedekah +
-                      (kerja ? gajiPerHari : 0)
+                      patunganUntukEma.adi +
+                      patunganUntukEma.uko +
+                      (kerja ? gajiHarian : 0)
                   )}
                 </b>
               </li>
@@ -339,15 +383,6 @@ const AlokasiPemasukan = () => {
                 </li>
               )}
 
-              {/* Transfer Uang Ema IKI */}
-              <li className="mb-6">
-                {simpleMode ? "Transfer" : "Transfer Uang"} Ke{" "}
-                <b>Dana Iki Maskiah</b> Sebesar{" "}
-                <b>
-                  {formatNumber(patunganUntukEma.adi + patunganUntukEma.uko)}
-                </b>
-              </li>
-
               {/* Catat Pemasukan Ke Dana Darurat */}
               <div className="mb-6">
                 {!simpleMode && (
@@ -355,14 +390,28 @@ const AlokasiPemasukan = () => {
                     <li>
                       Catat Pemasukan Uang Capital Sebesar{" "}
                       <b>{formatNumber(uangCapital)}</b>
+                      {!simpleMode && (
+                        <WordInBracket
+                          kalimat={`${metode.capital}% x ${formatNumber(
+                            komisiKotor - patunganUntukEma.adi
+                          )}`}
+                        />
+                      )}
                     </li>
                     <li>
                       Catat Pemasukan Uang Dana Darurat Sebesar{" "}
                       <b>{formatNumber(uangDanaDarurat)}</b>
+                      {!simpleMode && (
+                        <WordInBracket
+                          kalimat={`${metode.danaDarurat}% x ${formatNumber(
+                            komisiKotor - patunganUntukEma.adi
+                          )}`}
+                        />
+                      )}
                     </li>
                     {raw(hutangUko) > 0 && (
                       <li>
-                        Catat Pemasukan Uang Dana Darurat
+                        Catat Pemasukan Uang Dana Capital / Konsumsi
                         <WordInBracket kalimat={"Hutang Uko"} />
                         Sebesar <b>{formatNumber(raw(hutangUko))}</b>
                       </li>
@@ -370,16 +419,30 @@ const AlokasiPemasukan = () => {
                     <li>
                       Catat Pemasukan Uang Investasi Sebesar{" "}
                       <b>{formatNumber(uangInvestasi)}</b>
+                      {!simpleMode && (
+                        <WordInBracket
+                          kalimat={`${metode.investasi}% x ${formatNumber(
+                            komisiKotor - patunganUntukEma.adi
+                          )}`}
+                        />
+                      )}
                     </li>
                     <li>
                       Catat Pemasukan Uang Sedekah Sebesar{" "}
                       <b>{formatNumber(uangUntukSedekah)}</b>
+                      {!simpleMode && (
+                        <WordInBracket
+                          kalimat={`${metode.sedekah}% x ${formatNumber(
+                            komisiKotor - patunganUntukEma.adi
+                          )}`}
+                        />
+                      )}
                     </li>
                     {kerja && (
                       <li>
                         Catat Pemasukan Uang Capital
                         <WordInBracket kalimat={"Gaji"} />
-                        Sebesar <b>{formatNumber(gajiPerHari)}</b>
+                        Sebesar <b>{formatNumber(gajiHarian)}</b>
                       </li>
                     )}
                   </>
@@ -425,7 +488,7 @@ const AlokasiPemasukan = () => {
                             <WordInBracket kalimat={"Gaji"} />
                           </span>
                           <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
-                          <b>{formatNumber(gajiPerHari)}</b>
+                          <b>{formatNumber(gajiHarian)}</b>
                         </li>
                       )}
                     </ol>
@@ -454,13 +517,13 @@ const AlokasiPemasukan = () => {
                 </li>
               </ol>
               <span>
-                Gaji Per Hari : <b>{formatNumber(gajiPerHari)}</b>
+                Gaji Per Hari : <b>{formatNumber(gajiPerHariFull)}</b>
               </span>
               <span>Metode Pembagian</span>
               <ol className="list-inside px-2">
-              <li>
-                Capital : <b>{metode.capital}%</b>
-              </li>
+                <li>
+                  Capital : <b>{metode.capital}%</b>
+                </li>
                 <li>
                   Dana Darurat : <b>{metode.danaDarurat}%</b>
                 </li>
