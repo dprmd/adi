@@ -13,8 +13,8 @@ const metode = {
 
 // Patungan Untuk Uang Harian Ema Iki
 const patunganUntukEma = {
-  uko: 35000,
-  adi: 35000,
+  uko: 32000,
+  adi: 32000,
 };
 
 const gajiPerHari = 50000;
