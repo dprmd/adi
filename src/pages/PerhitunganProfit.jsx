@@ -196,39 +196,39 @@ const PerhitunganProfit = () => {
                   {item.value}
                   {/* Pencil Ikon Untuk Ubah Admin Shopee */}
                   {index === 0 && (
-                    <button
+                    <i
                       className="bi bi-pencil ml-2 hover:bg-black hover:text-white p-1 rounded-md"
                       onClick={() => {
                         setUbahAdminShopee(true);
                       }}
-                    ></button>
+                    ></i>
                   )}
                   {/* Pencil Ikon Untuk Ubah Admin Promo Extra */}
                   {index === 1 && (
-                    <button
+                    <i
                       className="bi bi-pencil ml-2 hover:bg-black hover:text-white p-1 rounded-md"
                       onClick={() => {
                         setUbahAdminPromoExtra(true);
                       }}
-                    ></button>
+                    ></i>
                   )}
                   {/* Pencil Ikon Untuk Ubah Admin Gratis Ongkir Extra */}
                   {index === 2 && (
-                    <button
+                    <i
                       className="bi bi-pencil ml-2 hover:bg-black hover:text-white p-1 rounded-md"
                       onClick={() => {
                         setUbahAdminGratisOngkirExtra(true);
                       }}
-                    ></button>
+                    ></i>
                   )}
                   {/* Pencil Ikon Untuk Ubah Komisi AMS */}
                   {index === 3 && (
-                    <button
+                    <i
                       className="bi bi-pencil ml-2 hover:bg-black hover:text-white p-1 rounded-md"
                       onClick={() => {
                         setUbahKomisiAMS(true);
                       }}
-                    ></button>
+                    ></i>
                   )}
                 </span>
               </div>
