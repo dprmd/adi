@@ -16,10 +16,6 @@
   @apply block;
 }
 
-button {
-  @apply text-gray-100;
-}
-
 .simplemodetransfer li {
   @apply flex justify-between items-center;
 }

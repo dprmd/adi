@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-``;
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import DialogUbahValue from "../components/DialogUbahValue";
@@ -21,6 +20,7 @@ const PerhitunganProfit = () => {
   const [perubahanAdminGratisOngkirExtra, setPerubahanAdminGratisOngkirExtra] =
     useState("");
   const [perubahanKomisiAMS, setPerubahanKomisiAMS] = useState("");
+
   // State Untuk Menutup dan Membuka Dialog
   const [ubahAdminShopee, setUbahAdminShopee] = useState(false);
   const [ubahAdminPromoExtra, setUbahAdminPromoExtra] = useState(false);
@@ -32,8 +32,8 @@ const PerhitunganProfit = () => {
   const biayaPerPesanan = 1250;
   const biayaPengiriman = 350;
   const [adminShopee, setAdminShopee] = useState(8);
-  const [adminPromoExtra, setAdminPromoExtra] = useState(2);
-  const [adminGratisOngkirExtra, setAdminGratisOngkirExtra] = useState(5);
+  const [adminPromoExtra, setAdminPromoExtra] = useState(4.5);
+  const [adminGratisOngkirExtra, setAdminGratisOngkirExtra] = useState(5.5);
   const [komisiAMS, setKomisiAMS] = useState(10);
 
   // Input
@@ -95,13 +95,13 @@ const PerhitunganProfit = () => {
       "adminPromoExtra",
       setAdminPromoExtra,
       setPerubahanAdminPromoExtra,
-      "2"
+      "4.5"
     );
     localStorageInit(
       "adminGratisOngkirExtra",
       setAdminGratisOngkirExtra,
       setPerubahanAdminGratisOngkirExtra,
-      "5"
+      "5.5"
     );
     localStorageInit("komisiAMS", setKomisiAMS, setPerubahanKomisiAMS, "10");
   }, []);
@@ -190,45 +190,45 @@ const PerhitunganProfit = () => {
           {/* Hitung */}
           <div className="border border-gray-400 rounded-md px-2 py-1">
             {keterangan.map((item, index) => (
-              <div className="flex justify-between gap-x-10">
+              <div className="flex justify-between gap-x-10" key={index}>
                 <span>{item.label}</span>
                 <span className="font-bold">
                   {item.value}
                   {/* Pencil Ikon Untuk Ubah Admin Shopee */}
                   {index === 0 && (
-                    <i
-                      class="bi bi-pencil ml-2 hover:bg-black hover:text-white p-1 rounded-md"
+                    <button
+                      className="bi bi-pencil ml-2 hover:bg-black hover:text-white p-1 rounded-md"
                       onClick={() => {
                         setUbahAdminShopee(true);
                       }}
-                    ></i>
+                    ></button>
                   )}
                   {/* Pencil Ikon Untuk Ubah Admin Promo Extra */}
                   {index === 1 && (
-                    <i
-                      class="bi bi-pencil ml-2 hover:bg-black hover:text-white p-1 rounded-md"
+                    <button
+                      className="bi bi-pencil ml-2 hover:bg-black hover:text-white p-1 rounded-md"
                       onClick={() => {
                         setUbahAdminPromoExtra(true);
                       }}
-                    ></i>
+                    ></button>
                   )}
                   {/* Pencil Ikon Untuk Ubah Admin Gratis Ongkir Extra */}
                   {index === 2 && (
-                    <i
-                      class="bi bi-pencil ml-2 hover:bg-black hover:text-white p-1 rounded-md"
+                    <button
+                      className="bi bi-pencil ml-2 hover:bg-black hover:text-white p-1 rounded-md"
                       onClick={() => {
                         setUbahAdminGratisOngkirExtra(true);
                       }}
-                    ></i>
+                    ></button>
                   )}
                   {/* Pencil Ikon Untuk Ubah Komisi AMS */}
                   {index === 3 && (
-                    <i
-                      class="bi bi-pencil ml-2 hover:bg-black hover:text-white p-1 rounded-md"
+                    <button
+                      className="bi bi-pencil ml-2 hover:bg-black hover:text-white p-1 rounded-md"
                       onClick={() => {
                         setUbahKomisiAMS(true);
                       }}
-                    ></i>
+                    ></button>
                   )}
                 </span>
               </div>
@@ -291,42 +291,37 @@ const PerhitunganProfit = () => {
 
       {sudahHitung && (
         <div className="border border-gray-400 rounded-md p-4">
-          <p>
-            <div className="flex flex-col text-gray-500 text-[12px]">
-              <small>
-                Biaya Admin Star : Rp{" "}
-                {formatNumber(
-                  Math.round(percentFrom(adminShopee, raw(hargaJual)))
-                )}
-              </small>
-              <small>
-                Biaya Admin Promo Extra : Rp{" "}
-                {formatNumber(
-                  Math.round(percentFrom(adminPromoExtra, raw(hargaJual)))
-                )}
-              </small>
-              <small>
-                Biaya Admin Gratis Ongkir Extra : Rp{" "}
-                {formatNumber(
-                  Math.round(
-                    percentFrom(adminGratisOngkirExtra, raw(hargaJual))
-                  )
-                )}
-              </small>
-              <small>
-                Biaya Per Pesanan : Rp{" "}
-                {formatNumber(Math.round(biayaPerPesanan))}
-              </small>
-              <small>
-                Biaya Program Hemat Kirim : Rp{" "}
-                {formatNumber(Math.round(biayaPengiriman))}
-              </small>
-            </div>
-            <span>
-              Total Admin Shopee Sebesar{" "}
-              <b>{formatNumber(Math.round(totalAdminShopee))}</b>
-            </span>
-          </p>
+          <div className="flex flex-col text-gray-500 text-[12px]">
+            <small>
+              Biaya Admin Star : Rp{" "}
+              {formatNumber(
+                Math.round(percentFrom(adminShopee, raw(hargaJual)))
+              )}
+            </small>
+            <small>
+              Biaya Admin Promo Extra : Rp{" "}
+              {formatNumber(
+                Math.round(percentFrom(adminPromoExtra, raw(hargaJual)))
+              )}
+            </small>
+            <small>
+              Biaya Admin Gratis Ongkir Extra : Rp{" "}
+              {formatNumber(
+                Math.round(percentFrom(adminGratisOngkirExtra, raw(hargaJual)))
+              )}
+            </small>
+            <small>
+              Biaya Per Pesanan : Rp {formatNumber(Math.round(biayaPerPesanan))}
+            </small>
+            <small>
+              Biaya Program Hemat Kirim : Rp{" "}
+              {formatNumber(Math.round(biayaPengiriman))}
+            </small>
+          </div>
+          <span>
+            Total Admin Shopee Sebesar{" "}
+            <b>{formatNumber(Math.round(totalAdminShopee))}</b>
+          </span>
           <p>
             Komisi Affiliate : <b>{formatNumber(Math.round(totalKomisiAMS))}</b>
           </p>
