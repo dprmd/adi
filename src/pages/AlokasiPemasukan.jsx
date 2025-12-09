@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { formatNumber, raw, validateNumber } from "../utils/generalFunction";
 import WordInBracket from "../components/WordInBracket";
+import { useEffect } from "react";
 
 // Harus Ada Total 100
 const metode = {
@@ -63,14 +64,19 @@ const AlokasiPemasukan = () => {
   const hitungSekarang = (e) => {
     e.preventDefault();
 
+    let gajiHarianTemp = 0;
+
     // hitung gaji harian
     if (kerja) {
       if (waktuKerja === "Satu Hari Full") {
+        gajiHarianTemp = gajiPerHariFull;
         setGajiHarian(gajiPerHariFull);
       } else {
+        gajiHarianTemp = gajiPerHariHalf;
         setGajiHarian(gajiPerHariHalf);
       }
     } else {
+      gajiHarianTemp = 0;
       setGajiHarian(0);
     }
 
@@ -84,7 +90,7 @@ const AlokasiPemasukan = () => {
       (patunganUntukEma.uko + getKomisiKotor) -
       raw(hutangUko);
     if (kerja) {
-      setUangAdeSiska(untukAdeSiska - gajiHarian);
+      setUangAdeSiska(untukAdeSiska - gajiHarianTemp);
     } else {
       setUangAdeSiska(untukAdeSiska);
     }
@@ -147,7 +153,7 @@ const AlokasiPemasukan = () => {
             type="button"
             onClick={() => {
               setKerja(!kerja);
-              hitungSekarang();
+              setSudahHitung(false);
             }}
             className={`w-[45px] h-[25px] rounded-full flex ${
               kerja ? "bg-green-400 justify-end" : "bg-slate-300 justify-start"
@@ -162,7 +168,10 @@ const AlokasiPemasukan = () => {
             <span>Berapa Lama Kerja :</span>
             <select
               value={waktuKerja}
-              onChange={(e) => setWaktuKerja(e.target.value)}
+              onChange={(e) => {
+                setWaktuKerja(e.target.value);
+                setSudahHitung(false);
+              }}
             >
               <option value="Satu Hari Full">Satu Hari Full</option>
               <option value="Setengah Hari">Setengah Hari</option>
@@ -199,6 +208,7 @@ const AlokasiPemasukan = () => {
             value={totalPenghasilanShopee}
             required={true}
             onChange={(e) => {
+              setSudahHitung(false);
               const number = validateNumber(e);
               setTotalPenghasilanShopee(formatNumber(number));
             }}
@@ -217,6 +227,7 @@ const AlokasiPemasukan = () => {
             value={penghasilanHPP}
             required={true}
             onChange={(e) => {
+              setSudahHitung(false);
               const number = validateNumber(e);
               setPenghasilanHPP(formatNumber(number));
             }}
@@ -233,6 +244,7 @@ const AlokasiPemasukan = () => {
             type="text"
             value={hutangUko}
             onChange={(e) => {
+              setSudahHitung(false);
               const number = validateNumber(e);
               setHutangUko(formatNumber(number));
             }}
@@ -445,6 +457,14 @@ const AlokasiPemasukan = () => {
                         Sebesar <b>{formatNumber(gajiHarian)}</b>
                       </li>
                     )}
+                    <li>
+                      Edit Rekening Ema Iki Dengan Menambahkan Nominal Sebesar{" "}
+                      <b>
+                        {formatNumber(
+                          patunganUntukEma.uko + patunganUntukEma.adi
+                        )}
+                      </b>
+                    </li>
                   </>
                 )}
                 {simpleMode && (
@@ -491,6 +511,15 @@ const AlokasiPemasukan = () => {
                           <b>{formatNumber(gajiHarian)}</b>
                         </li>
                       )}
+                      <li>
+                        <span>Edit Rekening Ema Iki</span>
+                        <div className="bg-slate-900 flex-auto h-[2px] mx-1"></div>
+                        <b>
+                          {formatNumber(
+                            patunganUntukEma.uko + patunganUntukEma.adi
+                          )}
+                        </b>
+                      </li>
                     </ol>
                   </li>
                 )}
